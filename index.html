@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magento 2 + Hyvä — Interview Prep</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.7; }
+    
+    /* Nav */
+    nav { background: #1e293b; border-bottom: 1px solid #334155; padding: 12px 24px; position: sticky; top: 0; z-index: 100; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    nav span { color: #94a3b8; font-size: 13px; font-weight: 600; margin-right: 8px; }
+    nav a { color: #64748b; text-decoration: none; font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 1px solid #334155; transition: all 0.2s; }
+    nav a:hover { background: #334155; color: #e2e8f0; }
+
+    /* Layout */
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+    
+    /* Hero */
+    .hero { text-align: center; padding: 48px 0 40px; }
+    .hero h1 { font-size: 2.4rem; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: #94a3b8; margin-top: 12px; font-size: 1.05rem; }
+    .badge { display: inline-block; background: #1e3a5f; color: #38bdf8; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; border: 1px solid #1d4ed8; margin: 4px; }
+    
+    /* Sections */
+    .section { margin-bottom: 48px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #1e293b; }
+    .section-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .section-title { font-size: 1.4rem; font-weight: 700; color: #f1f5f9; }
+    .section-sub { color: #64748b; font-size: 0.85rem; margin-top: 2px; }
+    
+    /* Cards */
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
+    .card h3 { color: #38bdf8; font-size: 1rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .card p, .card li { color: #cbd5e1; font-size: 0.9rem; }
+    .card ul, .card ol { padding-left: 20px; }
+    .card li { margin-bottom: 6px; }
+    
+    /* Q&A */
+    .qa { background: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+    .qa-q { padding: 16px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .qa-q:hover { background: #263548; }
+    .qa-q-text { font-weight: 600; color: #e2e8f0; font-size: 0.95rem; }
+    .qa-q-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; flex-shrink: 0; margin-top: 2px; }
+    .tag-general { background: #1e3a5f; color: #38bdf8; border: 1px solid #1d4ed8; }
+    .tag-technical { background: #1a2e1a; color: #4ade80; border: 1px solid #166534; }
+    .tag-hyva { background: #2d1b69; color: #a78bfa; border: 1px solid #5b21b6; }
+    .tag-b2b { background: #2d1a1a; color: #fb923c; border: 1px solid #9a3412; }
+    .tag-infra { background: #1a2d2d; color: #2dd4bf; border: 1px solid #0f766e; }
+    .qa-arrow { color: #475569; font-size: 12px; flex-shrink: 0; padding-top: 3px; transition: transform 0.2s; }
+    .qa.open .qa-arrow { transform: rotate(180deg); }
+    .qa-a { display: none; padding: 0 20px 16px; border-top: 1px solid #263548; }
+    .qa.open .qa-a { display: block; }
+    .qa-a p, .qa-a li { color: #94a3b8; font-size: 0.88rem; margin-top: 8px; }
+    .qa-a ul, .qa-a ol { padding-left: 20px; }
+    .qa-a li { margin-bottom: 5px; }
+    .qa-a strong { color: #cbd5e1; }
+    .qa-a .answer-label { color: #4ade80; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 12px; margin-bottom: 4px; }
+    
+    /* Code */
+    pre, code { font-family: 'Fira Code', 'Cascadia Code', monospace; }
+    pre { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; overflow-x: auto; font-size: 0.8rem; color: #a5f3fc; margin: 12px 0; }
+    code { background: #0f172a; color: #a5f3fc; padding: 1px 6px; border-radius: 4px; font-size: 0.85em; }
+    
+    /* Diagram */
+    .diagram { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 20px; margin: 12px 0; font-family: monospace; font-size: 0.82rem; color: #7dd3fc; white-space: pre; overflow-x: auto; }
+    
+    /* Highlight boxes */
+    .tip { background: #0c2a0c; border-left: 3px solid #4ade80; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0; }
+    .tip p { color: #86efac; font-size: 0.88rem; }
+    .tip strong { color: #4ade80; }
+    .warn { background: #2d1a00; border-left: 3px solid #fb923c; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0; }
+    .warn p { color: #fdba74; font-size: 0.88rem; }
+    .info { background: #0c1f3a; border-left: 3px solid #38bdf8; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0; }
+    .info p { color: #7dd3fc; font-size: 0.88rem; }
+    
+    /* Grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+    
+    /* Progress bar */
+    .progress-section { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; }
+    .progress-section h3 { color: #94a3b8; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+    .checklist-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+    .checklist-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #38bdf8; }
+    .checklist-item label { color: #cbd5e1; font-size: 0.9rem; cursor: pointer; }
+    .checklist-item.done label { text-decoration: line-through; color: #475569; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.85rem; }
+    th { background: #0f172a; color: #64748b; padding: 10px 14px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #334155; }
+    td { padding: 10px 14px; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+    tr:hover td { background: #1a2540; }
+    
+    /* Project tags */
+    .project-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin: 2px; }
+    .pb-sgd { background: #1e3a5f; color: #38bdf8; }
+    .pb-gem { background: #1a2e1a; color: #4ade80; }
+    .pb-sat { background: #2d1b69; color: #a78bfa; }
+    
+    /* Section colors */
+    .ic-magento { background: #1e3a5f; }
+    .ic-hyva { background: #2d1b69; }
+    .ic-b2b { background: #2d1a1a; }
+    .ic-infra { background: #1a2d2d; }
+    .ic-qa { background: #1e293b; border: 1px solid #4ade80; }
+    .ic-proj { background: #2a1f0a; }
+    
+    .toc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    @media (max-width: 600px) { .toc-grid { grid-template-columns: 1fr 1fr; } }
+    .toc-item { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px; text-align: center; text-decoration: none; transition: all 0.2s; }
+    .toc-item:hover { border-color: #38bdf8; background: #0c1f3a; }
+    .toc-item .toc-icon { font-size: 1.5rem; margin-bottom: 4px; }
+    .toc-item .toc-label { color: #94a3b8; font-size: 0.78rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span>📚 Prep</span>
+  <a href="#magento">Magento 2</a>
+  <a href="#hyva">Hyvä</a>
+  <a href="#b2b">B2B</a>
+  <a href="#projects">My Projects</a>
+  <a href="#questions">Q&A</a>
+  <a href="#infra">GCP + Security</a>
+  <a href="#checklist">Checklist</a>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Interview Prep Guide</h1>
+    <p>E-commerce Developer (Magento 2) — Gila AlTawakol Electric</p>
+    <div style="margin-top: 16px;">
+      <span class="badge">Magento 2</span>
+      <span class="badge">Hyvä Theme</span>
+      <span class="badge">B2B / B2C</span>
+      <span class="badge">PHP</span>
+      <span class="badge">Alpine.js</span>
+      <span class="badge">TailwindCSS</span>
+      <span class="badge">GCP</span>
+      <span class="badge">Cloudflare</span>
+    </div>
+    <div class="info" style="text-align: left; max-width: 600px; margin: 20px auto 0;">
+      <p>🎯 <strong>Interview insight:</strong> Interviewers are not deep Magento experts. Questions will be general. Show confidence in your real experience. You built B2B from scratch at Scandiweb — that's exactly what they need.</p>
+    </div>
+  </div>
+
+  <!-- Jump links -->
+  <div class="toc-grid" style="margin-bottom: 40px;">
+    <a href="#magento" class="toc-item"><div class="toc-icon">🧱</div><div class="toc-label">Magento 2 Core</div></a>
+    <a href="#hyva" class="toc-item"><div class="toc-icon">⚡</div><div class="toc-label">Hyvä Theme</div></a>
+    <a href="#b2b" class="toc-item"><div class="toc-icon">🏢</div><div class="toc-label">B2B Features</div></a>
+    <a href="#projects" class="toc-item"><div class="toc-icon">💼</div><div class="toc-label">My Projects</div></a>
+    <a href="#questions" class="toc-item"><div class="toc-icon">🎤</div><div class="toc-label">Interview Q&A</div></a>
+    <a href="#infra" class="toc-item"><div class="toc-icon">☁️</div><div class="toc-label">GCP + Security</div></a>
+  </div>
+
+  <!-- ===== SECTION 1: MAGENTO 2 CORE ===== -->
+  <div class="section" id="magento">
+    <div class="section-header">
+      <div class="section-icon ic-magento">🧱</div>
+      <div>
+        <div class="section-title">Magento 2 Core Concepts</div>
+        <div class="section-sub">Architecture, modules, how everything fits together</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🏗️ What IS Magento 2? (The Big Picture)</h3>
+      <p>Magento 2 is a PHP-based e-commerce platform. Think of it like a huge LEGO set — it comes with hundreds of ready-made pieces (modules), and you can add/override/build new pieces without touching the core.</p>
+      <div class="diagram">
+REQUEST → index.php → Bootstrap → Routing → Controller
+                                                    ↓
+                                             Block / ViewModel (PHP logic)
+                                                    ↓
+                                             Layout XML (decides what to show)
+                                                    ↓
+                                             Template .phtml (HTML output)</div>
+      <div class="tip"><p><strong>Key principle:</strong> Never modify core files. Always extend via modules, plugins, or theme overrides. This way upgrades don't break your work.</p></div>
+    </div>
+
+    <div class="card">
+      <h3>📦 Module Structure — The Building Block</h3>
+      <p>Every feature in Magento lives in a <strong>module</strong>. Here's the minimum structure:</p>
+      <pre>app/code/Vendor/ModuleName/
+├── registration.php          ← tells Magento "I exist"
+├── etc/
+│   └── module.xml            ← module name + dependencies
+├── etc/frontend/
+│   └── di.xml                ← dependency injection config
+├── Plugin/                   ← intercept other classes
+├── Observer/                 ← listen to events
+├── ViewModel/                ← PHP logic for templates
+└── view/frontend/
+    ├── layout/               ← layout XML files
+    └── templates/            ← .phtml template files</pre>
+      <div class="tip"><p><strong>After creating a module:</strong> Run <code>bin/magento setup:upgrade</code> to register it, then <code>bin/magento cache:flush</code></p></div>
+    </div>
+
+    <div class="card">
+      <h3>🎛️ Layout XML — Magento's "Page Blueprint"</h3>
+      <p>Layout XML files decide WHAT appears on a page and WHERE. They're XML files that add/remove/move blocks.</p>
+      <pre>&lt;!-- catalog_product_view.xml — runs on product pages --&gt;
+&lt;page&gt;
+  &lt;body&gt;
+    &lt;referenceContainer name="content"&gt;
+      &lt;block class="MyBlock" name="my.block" template="template.phtml"&gt;
+        &lt;arguments&gt;
+          &lt;argument name="view_model" xsi:type="object"&gt;My\ViewModel&lt;/argument&gt;
+        &lt;/arguments&gt;
+      &lt;/block&gt;
+    &lt;/referenceContainer&gt;
+  &lt;/body&gt;
+&lt;/page&gt;</pre>
+      <div class="grid-2">
+        <div>
+          <p><strong>Common layout handles:</strong></p>
+          <ul>
+            <li><code>default.xml</code> — every page</li>
+            <li><code>catalog_product_view.xml</code> — product page</li>
+            <li><code>catalog_category_view.xml</code> — category page</li>
+            <li><code>checkout_cart_index.xml</code> — cart</li>
+            <li><code>customer_account_*.xml</code> — account pages</li>
+          </ul>
+        </div>
+        <div>
+          <p><strong>Key actions:</strong></p>
+          <ul>
+            <li><code>referenceBlock</code> — modify existing block</li>
+            <li><code>referenceContainer</code> — modify container</li>
+            <li><code>remove</code> — hide a block</li>
+            <li><code>move</code> — move block to another container</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔌 Plugins — Intercepting Any Method</h3>
+      <p>A Plugin lets you run code BEFORE, AFTER, or AROUND any public method in Magento — without editing the original class.</p>
+      <pre>// di.xml — register the plugin
+&lt;type name="Magento\Catalog\Model\Product"&gt;
+  &lt;plugin name="my_plugin" type="Vendor\Module\Plugin\ProductPlugin"/&gt;
+&lt;/type&gt;
+
+// ProductPlugin.php
+public function afterGetName(\Magento\Catalog\Model\Product $subject, string $result): string {
+    return $result . ' — Sale!';  // modifies the return value
+}</pre>
+      <table>
+        <tr><th>Type</th><th>When it runs</th><th>Can change?</th></tr>
+        <tr><td><code>before</code></td><td>Before the original method</td><td>Input arguments</td></tr>
+        <tr><td><code>after</code></td><td>After the original method</td><td>Return value</td></tr>
+        <tr><td><code>around</code></td><td>Wraps the original method</td><td>Everything (use sparingly)</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>📣 Events & Observers — React to Things That Happen</h3>
+      <p>Magento fires events at key moments (checkout completes, product saves, etc.). You can listen and react.</p>
+      <pre>// events.xml
+&lt;event name="checkout_submit_all_after"&gt;
+  &lt;observer name="my_observer" instance="Vendor\Module\Observer\OrderObserver"/&gt;
+&lt;/event&gt;
+
+// OrderObserver.php
+public function execute(\Magento\Framework\Event\Observer $observer): void {
+    $order = $observer->getEvent()->getOrder();
+    // do something with the order
+}</pre>
+      <div class="tip"><p><strong>Plugin vs Observer:</strong> Use <strong>observers</strong> when Magento fires an event at exactly the right moment. Use <strong>plugins</strong> when you need to intercept a specific method that doesn't have an event.</p></div>
+    </div>
+
+    <div class="card">
+      <h3>💉 Dependency Injection (DI) — How Classes Get Their Dependencies</h3>
+      <p>In Magento, you never use <code>new ClassName()</code>. Instead, you declare what you need in the constructor, and Magento injects it automatically. This is called DI.</p>
+      <pre>class MyViewModel implements ArgumentInterface
+{
+    public function __construct(
+        private readonly ProductRepositoryInterface $productRepository,
+        private readonly StoreManagerInterface $storeManager
+    ) {}
+
+    public function getProduct(int $id): ProductInterface {
+        return $this->productRepository->getById($id);
+    }
+}</pre>
+      <p style="margin-top:8px">The <code>di.xml</code> file lets you configure which implementation to inject (e.g., swap a class, add a plugin, configure preferences).</p>
+    </div>
+
+    <div class="card">
+      <h3>🗃️ Data Patches — Installing Data via Code</h3>
+      <p>When you need to insert/update database data as part of your module (CMS blocks, config values, attributes), use a <strong>Data Patch</strong>. It runs once via <code>bin/magento setup:upgrade</code>.</p>
+      <pre>class AddMyBlock implements DataPatchInterface
+{
+    public function apply(): void {
+        // create a CMS block, insert config, create attribute, etc.
+        $this->moduleDataSetup->startSetup();
+        // ... your code
+        $this->moduleDataSetup->endSetup();
+    }
+
+    public static function getDependencies(): array { return []; }
+    public function getAliases(): array { return []; }
+}</pre>
+      <div class="warn"><p><strong>Never modify a deployed patch</strong> — create a new one that depends on the original instead. Editing a deployed patch means everyone must manually delete it from the DB and re-run.</p></div>
+    </div>
+
+    <div class="card">
+      <h3>🛠️ Essential CLI Commands</h3>
+      <div class="grid-2">
+        <div>
+          <p><strong>Development:</strong></p>
+          <pre style="font-size:0.75rem">bin/magento setup:upgrade          # register modules
+bin/magento cache:flush            # clear ALL caches
+bin/magento cache:clean            # clean specific cache
+bin/magento setup:di:compile       # compile DI
+bin/magento setup:static-content:deploy
+bin/magento indexer:reindex        # reindex data</pre>
+        </div>
+        <div>
+          <p><strong>Useful ones:</strong></p>
+          <pre style="font-size:0.75rem">bin/magento module:enable Vendor_Name
+bin/magento module:disable Vendor_Name
+bin/magento admin:user:create ...
+bin/magento config:set path value
+bin/magento config:show path
+bin/magento cron:run</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🧩 EAV Model — The Product Attribute System</h3>
+      <p>EAV = Entity-Attribute-Value. It's how Magento stores product data so flexibly. Instead of adding columns to a table, attributes are stored as separate rows.</p>
+      <div class="diagram">Normal DB:    products table → id | name | price | color | size | ...
+EAV in Magento: catalog_product_entity         ← the "entity" (product)
+                catalog_product_entity_varchar  ← text values
+                catalog_product_entity_decimal  ← price/number values
+                catalog_product_entity_int      ← yes/no, selects</div>
+      <p style="margin-top:8px"><strong>Why?</strong> Allows unlimited custom attributes without schema changes. <strong>Downside?</strong> Slower queries (joins across many tables).</p>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 2: HYVÄ ===== -->
+  <div class="section" id="hyva">
+    <div class="section-header">
+      <div class="section-icon ic-hyva">⚡</div>
+      <div>
+        <div class="section-title">Hyvä Theme</div>
+        <div class="section-sub">Alpine.js + TailwindCSS — why it's a game-changer</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🤔 What is Hyvä and Why Does It Exist?</h3>
+      <p>The default Magento frontend (Luma) uses <strong>RequireJS + KnockoutJS</strong> — both old, slow, and hard to work with. Hyvä replaces ALL of that with a much simpler, faster stack.</p>
+      <table>
+        <tr><th>Luma (default)</th><th>Hyvä</th></tr>
+        <tr><td>RequireJS (module loader)</td><td>❌ Gone — plain JS or Alpine.js</td></tr>
+        <tr><td>KnockoutJS (data binding)</td><td>❌ Gone — Alpine.js instead</td></tr>
+        <tr><td>Bootstrap 3 CSS</td><td>❌ Gone — TailwindCSS instead</td></tr>
+        <tr><td>Page load: ~3-5 seconds</td><td>✅ Page load: &lt;1 second (often)</td></tr>
+        <tr><td>JS bundle: 800KB+</td><td>✅ JS bundle: ~40KB</td></tr>
+      </table>
+      <div class="tip"><p><strong>Performance numbers you can quote:</strong> Hyvä typically improves Google Lighthouse score from 30-50 to 90+. That's a 3x improvement that directly impacts SEO and conversion rates.</p></div>
+    </div>
+
+    <div class="card">
+      <h3>🏔️ Alpine.js — The JavaScript of Hyvä</h3>
+      <p>Alpine.js is like a lightweight Vue/React but lives in your HTML. No build step, no component files — just <code>x-</code> attributes on your HTML tags.</p>
+      <pre>&lt;!-- Simple counter example --&gt;
+&lt;div x-data="{ count: 0 }"&gt;
+  &lt;button @click="count++"&gt;+&lt;/button&gt;
+  &lt;span x-text="count"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- Real Magento example: toggle mobile menu --&gt;
+&lt;div x-data="{ isOpen: false }"&gt;
+  &lt;button @click="isOpen = !isOpen"&gt;Menu&lt;/button&gt;
+  &lt;nav x-show="isOpen" x-transition&gt;...&lt;/nav&gt;
+&lt;/div&gt;</pre>
+      <div class="grid-2">
+        <div>
+          <p><strong>Key directives:</strong></p>
+          <ul>
+            <li><code>x-data</code> — declare reactive data</li>
+            <li><code>x-show</code> — show/hide element</li>
+            <li><code>x-text</code> — set text content</li>
+            <li><code>x-bind</code> or <code>:</code> — bind attribute</li>
+            <li><code>x-on</code> or <code>@</code> — event listener</li>
+            <li><code>x-model</code> — two-way form binding</li>
+            <li><code>x-if</code> — conditional rendering</li>
+            <li><code>x-for</code> — loop rendering</li>
+          </ul>
+        </div>
+        <div>
+          <p><strong>Advanced features used in projects:</strong></p>
+          <ul>
+            <li><code>$dispatch('event-name', data)</code> — fire custom event</li>
+            <li><code>$store.varName</code> — global state store</li>
+            <li><code>Alpine.data('name', () => {...})</code> — reusable component</li>
+            <li><code>x-init</code> — run JS on init</li>
+            <li><code>x-cloak</code> — hide until Alpine loads (prevents flash)</li>
+            <li><code>x-transition</code> — CSS transitions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🎨 TailwindCSS in Hyvä</h3>
+      <p>Instead of writing custom CSS files, you style with utility classes directly in your HTML. Hyvä runs a Tailwind build step that scans your templates and produces a tiny CSS file.</p>
+      <pre>&lt;!-- Before (Luma style) --&gt;
+&lt;div class="product-card"&gt; ... &lt;/div&gt;
+/* CSS file: .product-card { display: flex; padding: 16px; ... } */
+
+&lt;!-- Hyvä style --&gt;
+&lt;div class="flex flex-col p-4 bg-white rounded-lg shadow hover:shadow-md"&gt; ... &lt;/div&gt;</pre>
+      <div class="tip"><p><strong>Config location:</strong> <code>app/design/frontend/Vendor/Theme/web/tailwind/tailwind.config.js</code> — this is where you define project colors, fonts, and custom values. Always check this first on a new project.</p></div>
+    </div>
+
+    <div class="card">
+      <h3>🔄 How Template Override Works in Hyvä</h3>
+      <p>Hyvä overrides Magento core templates by placing files in the theme with the same path. Magento's fallback chain looks here first.</p>
+      <div class="diagram">Magento looks for templates in this order:
+1. Your theme:  app/design/frontend/Vendor/Theme/
+2. Parent theme: vendor/hyva-themes/magento2-default-theme/
+3. Module:       vendor/magento/module-catalog/view/frontend/
+
+Example — override product name template:
+Core path: Magento_Catalog/templates/product/view/default.phtml
+Your file:  app/design/frontend/Vendor/Theme/
+            Magento_Catalog/templates/product/view/default.phtml</div>
+      <div class="warn"><p><strong>Don't copy-paste full templates</strong> if you only need small changes — use Layout XML + a new block with a partial template instead. Full overrides break on Magento upgrades.</p></div>
+    </div>
+
+    <div class="card">
+      <h3>🔨 Hyvä Real-World Architecture (from your projects)</h3>
+      <p>Here's how a typical Hyvä feature looks end-to-end — for example, the <strong>store selector</strong> you built for Sports Group Denmark:</p>
+      <pre>1. Layout XML — add block to the page
+   app/design/frontend/SGD/Hyva/Magento_Customer/layout/customer_account_login.xml
+
+2. Template (.phtml) — HTML + Alpine.js
+   &lt;div x-data="storeSelector()"&gt;
+     &lt;select @change="selectStore($event.target.value)"&gt;
+       &lt;?php foreach ($block->getStores() as $store): ?&gt;
+         &lt;option value="&lt;?= $store->getId() ?&gt;"&gt;...&lt;/option&gt;
+       &lt;?php endforeach; ?&gt;
+     &lt;/select&gt;
+   &lt;/div&gt;
+
+3. ViewModel (PHP) — data for the template
+   public function getStores(): array { ... }
+
+4. Alpine.js component (in JS file or inline)
+   Alpine.data('storeSelector', () => ({
+     selectStore(storeId) { window.location.href = '/stores/store/switch/...'; }
+   }))</pre>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 3: B2B ===== -->
+  <div class="section" id="b2b">
+    <div class="section-header">
+      <div class="section-icon ic-b2b">🏢</div>
+      <div>
+        <div class="section-title">B2B vs B2C</div>
+        <div class="section-sub">Key differences and features you've built</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔑 B2C vs B2B — The Core Differences</h3>
+      <table>
+        <tr><th>Feature</th><th>B2C (Consumer)</th><th>B2B (Business)</th></tr>
+        <tr><td>Customer</td><td>Individual person</td><td>Company with multiple users</td></tr>
+        <tr><td>Pricing</td><td>Same for everyone</td><td>Custom prices per company/tier</td></tr>
+        <tr><td>Catalog</td><td>Everything visible</td><td>Restricted catalogs per company</td></tr>
+        <tr><td>Checkout</td><td>Credit card / fast</td><td>Purchase orders, credit lines</td></tr>
+        <tr><td>Orders</td><td>Individual</td><td>Order approval workflows</td></tr>
+        <tr><td>Login</td><td>Simple email/pass</td><td>Company account + role-based</td></tr>
+        <tr><td>Quantities</td><td>Usually 1-3 items</td><td>Bulk orders, minimum quantities</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>🏗️ B2B Features in Magento (What You've Actually Built)</h3>
+      <div class="grid-2">
+        <div>
+          <p><strong>Built in Sports Group Denmark:</strong></p>
+          <ul>
+            <li>✅ Post-login store selector (B2B customers pick their store/region)</li>
+            <li>✅ Customer account area (restyled full area)</li>
+            <li>✅ B2B PLP from scratch (grid/list view)</li>
+            <li>✅ Amasty ShopBy layered navigation</li>
+            <li>✅ Auth flows (login, register, forgot password)</li>
+            <li>✅ 3 custom Magento modules</li>
+          </ul>
+        </div>
+        <div>
+          <p><strong>Common Magento B2B modules:</strong></p>
+          <ul>
+            <li><code>Magento_Company</code> — company accounts</li>
+            <li><code>Magento_SharedCatalog</code> — restrict catalogs</li>
+            <li><code>Magento_NegotiableQuote</code> — quote requests</li>
+            <li><code>Magento_PurchaseOrder</code> — approval workflows</li>
+            <li><code>Magento_Requisition</code> — saved shopping lists</li>
+            <li><code>Magento_QuickOrder</code> — bulk add by SKU</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip"><p><strong>Key insight to mention:</strong> "In B2B, customers aren't just individuals — they're companies with multiple users, roles, and approval chains. The whole customer model is different."</p></div>
+    </div>
+
+    <div class="card">
+      <h3>💰 Pricing in B2B — Tier & Customer Group Pricing</h3>
+      <p>B2B customers often get different prices. Magento handles this through:</p>
+      <ul>
+        <li><strong>Customer Groups</strong> — "Wholesale", "Retail", "VIP" — each group can have different prices</li>
+        <li><strong>Tier Pricing</strong> — buy 10+ get 5% off, buy 50+ get 15% off</li>
+        <li><strong>Shared Catalogs</strong> — B2B feature, assign specific products + prices per company</li>
+        <li><strong>Custom Price Rules</strong> — catalog price rules apply discounts to groups</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 4: PROJECTS ===== -->
+  <div class="section" id="projects">
+    <div class="section-header">
+      <div class="section-icon ic-proj">💼</div>
+      <div>
+        <div class="section-title">How to Talk About Your Projects</div>
+        <div class="section-sub">Your real experience — tell it confidently</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="project-badge pb-sgd">Sports Group Denmark</span> — B2B Platform (Strongest Example)</h3>
+      <p><strong>What it is:</strong> A B2B e-commerce platform for a Danish sports equipment company. Business customers (sports clubs, retailers) log in to place bulk orders.</p>
+      <p style="margin-top: 8px"><strong>What you built:</strong></p>
+      <ul>
+        <li>PLP (Product Listing Page) completely from scratch — grid view + list view toggle</li>
+        <li>Amasty ShopBy layered navigation (category filters, price range, search)</li>
+        <li>Post-login store selector — after login, B2B customer selects which store/region they represent</li>
+        <li>Full customer account area — dashboard, orders, profile, addresses</li>
+        <li>Auth flows — login, register, forgot password — all restyled with Hyvä</li>
+        <li>Custom 404 page via Page Builder content type</li>
+        <li>3 custom Magento modules, 11 tickets total</li>
+      </ul>
+      <div class="tip"><p><strong>Talk about this like:</strong> "At Sports Group Denmark, I worked on a B2B platform where business customers buy in bulk. I built the entire product listing page from scratch, including the filtering system, and created a post-login store selector for B2B company management."</p></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="project-badge pb-gem">Gemoss</span> — Full Storefront (Depth Example)</h3>
+      <p><strong>What it is:</strong> A Latvian e-commerce store, B2C. Full storefront built with Hyvä.</p>
+      <p style="margin-top: 8px"><strong>What you built:</strong></p>
+      <ul>
+        <li>Full PLP — product cards, grid layout, sorting toolbar</li>
+        <li>Amasty ShopBy layered navigation with price range slider</li>
+        <li>Quick shop modal — buy without leaving the listing page</li>
+        <li>Subcategory carousel at the top of category pages</li>
+        <li>Hero slider via Page Builder</li>
+        <li>Algolia search integration — autocomplete dropdown + search results page</li>
+        <li>Amasty Shop By Brand setup</li>
+        <li>20 tickets, multiple custom Magento modules</li>
+      </ul>
+      <div class="info"><p><strong>Algolia is important:</strong> It's a third-party search engine. Magento's default search is slow. Algolia replaces it with a fast, typo-tolerant, real-time search. You integrated this — shows you can work with third-party APIs/services.</p></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="project-badge pb-sat">Satoshi Hyvä Theme</span> — Open Source Contribution</h3>
+      <p><strong>What it is:</strong> An open-source Magento 2 starter theme built on Hyvä — like a template that other Scandiweb projects build on top of.</p>
+      <p style="margin-top: 8px"><strong>What you contributed:</strong> Core theme development using Hyvä, Alpine.js, TypeScript, and TailwindCSS.</p>
+      <div class="tip"><p><strong>Why this matters for the interview:</strong> "I didn't just use Hyvä — I contributed to an open-source theme that other teams build on top of. I understand the framework deeply enough to build the foundation, not just features."</p></div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Your "Story" for Each Scenario</h3>
+      <table>
+        <tr><th>If they ask about...</th><th>Your go-to story</th></tr>
+        <tr><td>"Magento experience"</td><td>1 yr 10 months at Scandiweb — 5+ real-client projects</td></tr>
+        <tr><td>"Building from scratch"</td><td>Sports Group Denmark — B2B platform PLP, store selector, 3 modules</td></tr>
+        <tr><td>"B2B experience"</td><td>Sports Group Denmark — B2B with company accounts, custom auth flows</td></tr>
+        <tr><td>"Complex features"</td><td>Gemoss — Algolia search integration + Amasty ShopBy</td></tr>
+        <tr><td>"Working independently"</td><td>Gemoss — 20 tickets, I owned them end-to-end</td></tr>
+        <tr><td>"Performance"</td><td>Hyvä over Luma — 30→90+ Lighthouse score, 800KB→40KB JS</td></tr>
+        <tr><td>"Team lead experience"</td><td>J.R. Dunn — led team of junior devs in Magento→Shopify migration</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 5: INTERVIEW Q&A ===== -->
+  <div class="section" id="questions">
+    <div class="section-header">
+      <div class="section-icon ic-qa">🎤</div>
+      <div>
+        <div class="section-title">Interview Questions & Answers</div>
+        <div class="section-sub">Click each question to expand the answer</div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-bottom: 16px;"><p><strong>Remember:</strong> Interviewers don't have deep Magento knowledge. Speak clearly, use analogies, and bring it back to your real project experience.</p></div>
+
+    <!-- GENERAL -->
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">Tell me about yourself and your experience.</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-general">GENERAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Your answer</div>
+        <p>"I'm Mohamed, a Magento 2 developer with almost 2 years of experience at Scandiweb — one of the world's top Magento agencies. I specialize in building e-commerce storefronts using Magento 2 with the Hyvä theme, which is the modern, high-performance approach to Magento frontend development.</p>
+        <p>I've worked on 5+ real client projects, including a full B2B platform for a Danish sports company, a Latvian e-commerce storefront with Algolia search integration, and I contributed to an open-source Hyvä theme used by other teams. I've also led a team of junior developers on a Magento-to-Shopify migration."</p>
+        <div class="tip" style="margin-top: 8px"><p><strong>Keep it 60-90 seconds.</strong> End with: "I'm excited about this role because it's a chance to own a full platform from scratch — which is exactly the kind of challenge I enjoy."</p></div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">Why Magento 2? Why not Shopify or WooCommerce?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-general">GENERAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Key points</div>
+        <ul>
+          <li><strong>Scale & customization:</strong> Magento handles millions of SKUs, complex B2B/B2C rules, custom pricing, multi-store setups — Shopify struggles here</li>
+          <li><strong>Self-hosted control:</strong> You own the data, infrastructure, and code — no platform lock-in</li>
+          <li><strong>B2B native:</strong> Magento has built-in company accounts, shared catalogs, purchase orders — others don't</li>
+          <li><strong>Enterprise-ready:</strong> Adobe Commerce (Magento) is used by companies like Ford, Coca-Cola, Samsung</li>
+        </ul>
+        <p style="margin-top: 8px"><strong>The honest answer:</strong> Shopify is easier for small stores. Magento is for complex, high-volume, customizable stores — which is exactly what an electrical equipment company selling to businesses needs.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">What is Hyvä theme and why should we use it?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-hyva">HYVÄ</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Simple explanation</div>
+        <p>"Magento's default theme (Luma) is built on old technology from 2013 — it's slow and hard to work with. Hyvä is a modern replacement that uses Alpine.js and TailwindCSS instead."</p>
+        <p style="margin-top: 8px"><strong>The result in numbers:</strong></p>
+        <ul>
+          <li>Google Lighthouse score: 30-50 (Luma) → 90+ (Hyvä)</li>
+          <li>JavaScript bundle: 800KB+ → ~40KB</li>
+          <li>Development speed: 2-3x faster (simpler tech stack)</li>
+        </ul>
+        <p style="margin-top: 8px">"I've been using Hyvä since my first project at Scandiweb — I even contributed to an open-source Hyvä starter theme."</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">How do you customize Magento without touching core files?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-technical">TECHNICAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">The three ways</div>
+        <ul>
+          <li><strong>Plugins (Interceptors):</strong> Intercept any public method — run code before, after, or around it. No core changes needed.</li>
+          <li><strong>Events & Observers:</strong> Magento fires events at key moments. You listen and react in your own code.</li>
+          <li><strong>Template/Layout overrides:</strong> Place a file with the same path in your theme — Magento uses yours first.</li>
+        </ul>
+        <p style="margin-top: 8px">Everything lives in your custom module under <code>app/code/</code> or your theme under <code>app/design/</code>. Core files in <code>vendor/</code> are never touched.</p>
+        <div class="tip" style="margin-top: 8px"><p><strong>Why this matters:</strong> When Magento releases a security patch or upgrade, your code stays safe because you never modified the core.</p></div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">Explain the difference between B2B and B2C in Magento.</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-b2b">B2B</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Your answer with real project context</div>
+        <p>"I've worked on both. The core difference is that B2B customers are companies, not individuals."</p>
+        <ul>
+          <li>B2B has <strong>company accounts</strong> with multiple users and roles</li>
+          <li>B2B has <strong>custom pricing</strong> — different companies see different prices</li>
+          <li>B2B often needs <strong>approval workflows</strong> — a manager must approve big purchases</li>
+          <li>B2B checkout might use <strong>purchase orders</strong> instead of credit cards</li>
+        </ul>
+        <p style="margin-top: 8px">"At Sports Group Denmark, I built a full B2B platform where sports clubs log in as companies. After login, they see a <strong>store selector</strong> to choose which region they're buying for — something I built as a custom module. The whole customer account experience was different from a regular B2C store."</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">How would you integrate a payment gateway in Magento?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-technical">TECHNICAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">The approach</div>
+        <p>Magento has a standard payment gateway interface. You either:</p>
+        <ol>
+          <li><strong>Use an existing module</strong> — most gateways (Stripe, PayPal, Braintree, Paymob for Egypt) have official Magento modules. You install via Composer and configure in Admin &gt; Stores &gt; Configuration.</li>
+          <li><strong>Build a custom gateway</strong> — implement <code>PaymentInterface</code>, handle authorize/capture/refund methods, add it to checkout config.</li>
+        </ol>
+        <p style="margin-top: 8px">The key files are <code>etc/config.xml</code> (default config), <code>etc/payment.xml</code> (payment method config), and the Gateway Command classes that handle the actual API calls.</p>
+        <div class="info"><p>For Egypt/MENA: Paymob, Fawry, and MyFatoorah all have Magento 2 modules available.</p></div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">How does Magento handle performance? What did you do to make stores fast?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-technical">TECHNICAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Real answer from experience</div>
+        <p><strong>Framework level (Magento config):</strong></p>
+        <ul>
+          <li>Full Page Cache (FPC) — caches entire pages for anonymous users</li>
+          <li>Redis for caching (faster than file cache)</li>
+          <li>Elasticsearch/OpenSearch for product search indexing</li>
+          <li>CDN for static files (images, JS, CSS)</li>
+          <li>Minify CSS/JS in production</li>
+        </ul>
+        <p style="margin-top: 8px"><strong>What Hyvä brings:</strong></p>
+        <ul>
+          <li>Replaced 800KB+ JS bundle with ~40KB Alpine.js</li>
+          <li>Removed RequireJS overhead (no more module loading waterfall)</li>
+          <li>Tailwind CSS is tiny after PurgeCSS removes unused classes</li>
+        </ul>
+        <p style="margin-top: 8px"><strong>From your projects:</strong> "On the PLP, I was conscious of performance — it's high-traffic. I made sure not to run duplicate queries and used efficient Alpine.js patterns for filtering."</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">What is REST and GraphQL API in Magento?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-technical">TECHNICAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Simple explanation</div>
+        <p>Magento exposes both REST and GraphQL APIs that let external systems (mobile apps, ERPs, front-ends) read and write Magento data.</p>
+        <table>
+          <tr><th></th><th>REST API</th><th>GraphQL</th></tr>
+          <tr><td>URL pattern</td><td><code>/rest/V1/products/SKU001</code></td><td><code>/graphql</code> (single endpoint)</td></tr>
+          <tr><td>Get specific fields</td><td>Gets everything</td><td>Request only what you need</td></tr>
+          <tr><td>Use case</td><td>ERP integrations, backend scripts</td><td>PWA/headless frontends</td></tr>
+        </table>
+        <p style="margin-top: 8px">"At JolaUSA I worked on a React-based PWA that consumed Magento's GraphQL API using Venia framework — so I have hands-on experience with both sides."</p>
+        <pre style="font-size: 0.75rem"># GraphQL example — get product info
+{ products(filter: { sku: { eq: "MH01" } }) {
+    items { name price { regularPrice { amount { value currency } } } }
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">How would you handle a Magento upgrade or security patch?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-technical">TECHNICAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">The process</div>
+        <ol>
+          <li><strong>Test on staging first</strong> — never on production directly</li>
+          <li><strong>Update via Composer:</strong> <code>composer update magento/product-community-edition --with-all-dependencies</code></li>
+          <li>Run <code>bin/magento setup:upgrade</code> and <code>setup:di:compile</code></li>
+          <li>Deploy static content: <code>setup:static-content:deploy</code></li>
+          <li><strong>Check for conflicts</strong> — any templates you overrode might need updates</li>
+          <li>Run full QA on staging</li>
+          <li>Deploy to production during low-traffic window with a rollback plan</li>
+        </ol>
+        <div class="tip"><p><strong>Why proper module structure matters:</strong> Because you never touch core files, upgrades only break things if a template you overrode changed in the core. This is why you minimize full template overrides.</p></div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">What is GCP and how would you use it for Magento?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-infra">INFRA</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Honest + confident answer</div>
+        <p>"My primary experience is in Magento development, but I understand cloud infrastructure well enough to set up and manage a production Magento environment on GCP."</p>
+        <p style="margin-top: 8px"><strong>For Magento on GCP, the key services are:</strong></p>
+        <ul>
+          <li><strong>Compute Engine (VM)</strong> — run the PHP/Nginx server</li>
+          <li><strong>Cloud SQL</strong> — managed MySQL database</li>
+          <li><strong>Cloud Storage</strong> — store product images, media files</li>
+          <li><strong>Cloud CDN</strong> — serve static files fast globally</li>
+          <li><strong>Load Balancing</strong> — distribute traffic across multiple servers when scaling</li>
+          <li><strong>IAM</strong> — control who can access what (least privilege principle)</li>
+        </ul>
+        <div class="tip"><p>"I'm a fast learner with infrastructure. Since this is a greenfield project, I'd start with a solid single-server setup and build in scaling capabilities as the store grows."</p></div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">What is Cloudflare and how would you use it?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-infra">INFRA</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Clear explanation</div>
+        <p>Cloudflare sits between your users and your server — it's a protective and accelerating layer.</p>
+        <table>
+          <tr><th>Cloudflare Feature</th><th>What it does for your store</th></tr>
+          <tr><td>CDN</td><td>Serves static files (images, CSS, JS) from servers near the user — faster load times</td></tr>
+          <tr><td>WAF (Web App Firewall)</td><td>Blocks SQL injection, XSS attacks before they reach your server</td></tr>
+          <tr><td>DDoS Protection</td><td>Absorbs massive attack traffic so your store stays up</td></tr>
+          <tr><td>SSL/TLS</td><td>Free HTTPS certificates, enforced HTTPS</td></tr>
+          <tr><td>Caching</td><td>Cache pages at the edge — even faster than Magento FPC for some content</td></tr>
+          <tr><td>Bot Protection</td><td>Block scrapers and fake checkout bots</td></tr>
+        </table>
+        <div class="info"><p>"For an electrical equipment company, DDoS protection and WAF are particularly important — B2B competitors sometimes try to scrape pricing data."</p></div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">How would you handle security in Magento? (PCI DSS, OWASP)</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-infra">INFRA</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Key points</div>
+        <p><strong>OWASP Top 10 in Magento context:</strong></p>
+        <ul>
+          <li><strong>SQL Injection</strong> — Magento's ORM (collections, repositories) parameterizes queries. Never concatenate user input into SQL.</li>
+          <li><strong>XSS</strong> — Always use <code>escapeHtml()</code>, <code>escapeUrl()</code> in templates. Magento blocks SVG uploads by default (XSS vector).</li>
+          <li><strong>CSRF</strong> — Magento adds CSRF tokens to all forms automatically.</li>
+          <li><strong>Auth</strong> — Enforce strong admin passwords, change admin URL from <code>/admin</code> to custom path, enable 2FA.</li>
+        </ul>
+        <p style="margin-top: 8px"><strong>PCI DSS basics:</strong> If handling card payments, use a hosted payment gateway (Stripe, etc.) so card data never touches your server — this takes you out of PCI scope.</p>
+        <p style="margin-top: 8px"><strong>Regular maintenance:</strong> Apply Magento security patches promptly (Adobe releases them monthly). Subscribe to Magento security alerts.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">You'll be working alone with no existing team. How do you handle that?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-general">GENERAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Your honest, confident answer</div>
+        <p>"This actually fits how I've worked. At Scandiweb, my tickets were mine to own end-to-end — I planned, built, tested, and delivered independently. On Gemoss alone I handled 20 tickets across multiple modules."</p>
+        <p style="margin-top: 8px"><strong>My approach for a standalone role:</strong></p>
+        <ul>
+          <li>Document everything — architecture decisions, module purposes, deployment steps</li>
+          <li>Use git with meaningful commit history so the codebase tells the story</li>
+          <li>Set up proper CI/CD early so deployments are safe and repeatable</li>
+          <li>Build in stages — get a working foundation first, then features</li>
+          <li>Communicate progress regularly with the business side (you're their eyes)</li>
+        </ul>
+        <div class="tip"><p>"The risk in a solo role is scope creep. I'd work with you to prioritize features clearly, and check in regularly to make sure we're building the right things."</p></div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">What's your expected salary? (If asked)</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-general">GENERAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Your answer</div>
+        <p>You discussed asking for <strong>60,000 EGP</strong> and mentioning your last salary was <strong>1,000 USD</strong>.</p>
+        <p style="margin-top: 8px"><strong>How to say it:</strong> "My last salary was around 1,000 USD. For this role, given that it's a standalone position with full ownership, I'm looking for around 60,000 EGP, plus benefits including social insurance."</p>
+        <div class="tip"><p>Saying "social insurance" (تأمينات) is smart — it shows you're thinking long-term and It shows you're thinking long-term and adds real value beyond base salary.</p></div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span class="qa-q-text">Do you have questions for us?</span>
+        <div style="display:flex; gap: 8px; align-items: center;">
+          <span class="qa-q-tag tag-general">GENERAL</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-a">
+        <div class="answer-label">Good questions to ask</div>
+        <ul>
+          <li>"What's the current state of the platform — starting completely from scratch, or is there existing code/infrastructure?"</li>
+          <li>"What third-party systems will need to integrate with it — ERP, inventory management, logistics?"</li>
+          <li>"What's the timeline for the first version to go live?"</li>
+          <li>"Will I be coordinating directly with the business team on requirements, or is there a project manager?"</li>
+          <li>"What hosting infrastructure is planned — is GCP already decided, or is that flexible?"</li>
+        </ul>
+        <div class="info"><p>Asking good questions shows you think like a senior developer, not just a coder. It also gives you info to negotiate and decide.</p></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 6: INFRA ===== -->
+  <div class="section" id="infra">
+    <div class="section-header">
+      <div class="section-icon ic-infra">☁️</div>
+      <div>
+        <div class="section-title">Infrastructure & Security Quick Reference</div>
+        <div class="section-sub">GCP, Cloudflare, Linux — the basics you need</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🖥️ Magento Server Stack (What You Need on the Server)</h3>
+      <div class="diagram">Cloudflare (WAF + CDN + DDoS)
+         ↓
+GCP Load Balancer
+         ↓
+Compute Engine VM (Ubuntu/Debian)
+  ├── Nginx (web server, handles HTTP)
+  ├── PHP-FPM 8.1+ (runs Magento PHP code)
+  ├── Redis (caching + sessions)
+  └── Elasticsearch/OpenSearch (search indexing)
+         ↓
+Cloud SQL (MySQL 8.0 — separate managed instance)
+         ↓
+Cloud Storage (product images, media files)</div>
+    </div>
+
+    <div class="card">
+      <h3>🐧 Linux Commands You Should Know</h3>
+      <div class="grid-2">
+        <div>
+          <pre style="font-size: 0.75rem"># File permissions (Magento needs these)
+find var/ -type f -exec chmod 664 {} \;
+find var/ -type d -exec chmod 775 {} \;
+chown -R www-data:www-data .
+
+# Check what's running
+systemctl status nginx
+systemctl status php8.1-fpm
+
+# View logs
+tail -f /var/log/nginx/error.log
+tail -f var/log/exception.log</pre>
+        </div>
+        <div>
+          <pre style="font-size: 0.75rem"># Nginx reload (after config change)
+nginx -t && systemctl reload nginx
+
+# Check disk space
+df -h
+
+# Check memory
+free -h
+
+# Check running processes
+htop  # or top
+
+# MySQL
+mysql -u root -p
+USE magento_db;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔒 Security Checklist for a New Magento Install</h3>
+      <ul>
+        <li>✅ Change admin URL from <code>/admin</code> to something custom (e.g., <code>/backend-xyz</code>)</li>
+        <li>✅ Enable 2FA for admin panel</li>
+        <li>✅ Strong admin passwords (16+ chars)</li>
+        <li>✅ Restrict admin access to specific IPs via Cloudflare/Nginx</li>
+        <li>✅ HTTPS only — redirect all HTTP to HTTPS</li>
+        <li>✅ Set proper file permissions (664 for files, 775 for dirs)</li>
+        <li>✅ Hide Magento version from headers</li>
+        <li>✅ WAF rules in Cloudflare (block common Magento exploit patterns)</li>
+        <li>✅ Regular backups — database + media files</li>
+        <li>✅ Subscribe to Adobe security alerts — apply patches quickly</li>
+        <li>✅ Never store card numbers — use hosted payment gateways</li>
+        <li>✅ GDPR: cookie consent, data deletion capability, privacy policy</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>🗄️ Backup Strategy (What to Mention)</h3>
+      <p>For a production Magento store, you need to back up:</p>
+      <ul>
+        <li><strong>Database (MySQL)</strong> — most important. Daily automated backups via Cloud SQL, keep 30 days. Also before any deployment.</li>
+        <li><strong>Media files</strong> (<code>pub/media/</code>) — product images etc. Store on Cloud Storage with versioning.</li>
+        <li><strong>Code</strong> — in Git. Full history is your code backup.</li>
+      </ul>
+      <div class="tip"><p><strong>Disaster recovery:</strong> Test your backups by actually restoring them on a staging environment. A backup you've never tested is not a backup.</p></div>
+    </div>
+
+  </div>
+
+  <!-- ===== CHECKLIST ===== -->
+  <div class="section" id="checklist">
+    <div class="section-header">
+      <div class="section-icon" style="background: #1a2d2d;">✅</div>
+      <div>
+        <div class="section-title">Pre-Interview Checklist</div>
+        <div class="section-sub">Track what you've reviewed</div>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <h3>Topics to Review</h3>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Magento 2 architecture overview (module, layout XML, MVC)</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Plugins (before/after/around) — know how to explain with an example</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Events & Observers — difference from plugins</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Dependency Injection — what it is, why Magento uses it</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Data Patches — when to use, gotchas (never modify deployed)</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Hyvä theme — what it replaces, performance numbers, Alpine.js basics</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>B2B vs B2C — core differences + your Sports Group Denmark story</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Your 3 main project stories (SGD, Gemoss, Satoshi)</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>GCP services overview (Compute, Cloud SQL, Storage, CDN, Load Balancer)</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Cloudflare — CDN, WAF, DDoS, SSL in one sentence each</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Security basics — OWASP top issues + Magento fixes</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>REST vs GraphQL — when to use each</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Practice "tell me about yourself" (90 seconds, smooth)</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Prepare 4-5 questions to ask them</label>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox"><label>Salary answer ready (60K EGP + benefits + insurance)</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🧠 Day-Before Reminders</h3>
+      <ul>
+        <li><strong>You know more than you think.</strong> 1 yr 10 months at one of the world's top Magento agencies is real, deep experience. Trust it.</li>
+        <li><strong>They need YOU more than you need them.</strong> Solo Magento dev from scratch is a hard hire — they have 26 applicants but Magento is a niche skill. You have exactly what they listed.</li>
+        <li><strong>Speak in stories, not facts.</strong> Don't just say "I know B2B." Say "At Sports Group Denmark, I built..." — stories are memorable and unquestionable.</li>
+        <li><strong>It's okay to say "I haven't done X directly, but I know how to approach it."</strong> GCP, Cloudflare — show confidence in your ability to learn, not just what you've done.</li>
+        <li><strong>Keep answers clear:</strong> Questions will be general (they don't have deep Magento expertise). Answer clearly, don't overcomplicate.</li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function toggleQA(el) {
+  const qa = el.closest('.qa');
+  qa.classList.toggle('open');
+}
+
+function toggleCheck(item) {
+  const cb = item.querySelector('input[type="checkbox"]');
+  cb.checked = !cb.checked;
+  item.classList.toggle('done', cb.checked);
+  // save to localStorage
+  saveChecklist();
+}
+
+function saveChecklist() {
+  const items = document.querySelectorAll('.checklist-item');
+  const state = Array.from(items).map(i => i.querySelector('input').checked);
+  localStorage.setItem('interview-checklist', JSON.stringify(state));
+}
+
+function loadChecklist() {
+  const saved = localStorage.getItem('interview-checklist');
+  if (!saved) return;
+  const state = JSON.parse(saved);
+  const items = document.querySelectorAll('.checklist-item');
+  items.forEach((item, i) => {
+    if (state[i]) {
+      item.querySelector('input').checked = true;
+      item.classList.add('done');
+    }
+  });
+}
+
+// prevent checkbox double-toggle
+document.querySelectorAll('.checklist-item input').forEach(cb => {
+  cb.addEventListener('click', e => e.stopPropagation());
+});
+
+loadChecklist();
+</script>
+
+</body>
+</html>
