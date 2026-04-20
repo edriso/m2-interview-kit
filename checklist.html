@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist Deep Dive — Interview Prep</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.7; }
+
+    nav { background: #1e293b; border-bottom: 1px solid #334155; padding: 12px 24px; position: sticky; top: 0; z-index: 100; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    nav .logo { color: #f1f5f9; font-size: 13px; font-weight: 700; margin-right: 8px; }
+    nav a { color: #64748b; text-decoration: none; font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 1px solid #334155; transition: all 0.2s; }
+    nav a:hover, nav a.active { background: #334155; color: #e2e8f0; }
+    nav .sep { color: #334155; }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+
+    .hero { text-align: center; padding: 40px 0 32px; }
+    .hero h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #4ade80, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: #94a3b8; margin-top: 10px; }
+
+    /* Topic cards */
+    .topic { background: #1e293b; border: 1px solid #334155; border-radius: 14px; margin-bottom: 20px; overflow: hidden; }
+    .topic-header { padding: 18px 22px; cursor: pointer; display: flex; align-items: flex-start; gap: 14px; transition: background 0.15s; }
+    .topic-header:hover { background: #263548; }
+    .topic-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+    .topic-title { flex: 1; }
+    .topic-title h3 { font-size: 0.97rem; font-weight: 700; color: #f1f5f9; }
+    .topic-title p { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+    .topic-status { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .done-btn { background: transparent; border: 1px solid #334155; color: #64748b; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
+    .done-btn:hover { border-color: #4ade80; color: #4ade80; }
+    .topic.checked .done-btn { background: #0c2a0c; border-color: #4ade80; color: #4ade80; }
+    .topic.checked .topic-title h3 { color: #475569; }
+    .chevron { color: #475569; font-size: 11px; padding-top: 1px; transition: transform 0.2s; }
+    .topic.open .chevron { transform: rotate(180deg); }
+
+    .topic-body { display: none; padding: 0 22px 20px; border-top: 1px solid #263548; }
+    .topic.open .topic-body { display: block; }
+
+    /* Content within topics */
+    h4 { color: #38bdf8; font-size: 0.88rem; font-weight: 700; margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.4px; }
+    p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 8px; }
+    p strong { color: #cbd5e1; }
+    ul, ol { padding-left: 20px; margin-bottom: 10px; }
+    li { color: #94a3b8; font-size: 0.9rem; margin-bottom: 5px; }
+    li strong { color: #cbd5e1; }
+
+    pre, code { font-family: 'Fira Code', 'Cascadia Code', monospace; }
+    pre { background: #0f172a; border: 1px solid #1e3a5f; border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: 0.78rem; color: #a5f3fc; margin: 10px 0; line-height: 1.6; }
+    code { background: #0f172a; color: #a5f3fc; padding: 1px 6px; border-radius: 4px; font-size: 0.82em; }
+
+    .diagram { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 14px 16px; font-family: monospace; font-size: 0.78rem; color: #7dd3fc; white-space: pre; overflow-x: auto; margin: 10px 0; line-height: 1.6; }
+
+    .tip { background: #0c2a0c; border-left: 3px solid #4ade80; border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 10px 0; }
+    .tip p { color: #86efac; font-size: 0.85rem; margin: 0; }
+    .warn { background: #2d1a00; border-left: 3px solid #fb923c; border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 10px 0; }
+    .warn p { color: #fdba74; font-size: 0.85rem; margin: 0; }
+    .info { background: #0c1f3a; border-left: 3px solid #38bdf8; border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 10px 0; }
+    .info p { color: #7dd3fc; font-size: 0.85rem; margin: 0; }
+    .say { background: #1a1a2e; border-left: 3px solid #a78bfa; border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 10px 0; }
+    .say-label { font-size: 10px; font-weight: 800; color: #a78bfa; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .say p { color: #c4b5fd; font-size: 0.88rem; font-style: italic; margin: 0; }
+
+    table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.82rem; }
+    th { background: #0f172a; color: #64748b; padding: 8px 12px; text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid #334155; }
+    td { padding: 8px 12px; color: #cbd5e1; border-bottom: 1px solid #1e293b; vertical-align: top; }
+    tr:hover td { background: #1a2540; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 10px 0; }
+    @media (max-width: 620px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .progress-bar-wrap { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; }
+    .progress-bar-wrap p { color: #64748b; font-size: 0.8rem; margin-bottom: 8px; }
+    .bar-bg { background: #1e293b; border-radius: 99px; height: 8px; }
+    .bar-fill { background: linear-gradient(90deg, #4ade80, #38bdf8); height: 8px; border-radius: 99px; transition: width 0.4s ease; }
+    .bar-label { color: #94a3b8; font-size: 0.82rem; margin-top: 6px; }
+
+    /* Color themes per topic */
+    .n1 .topic-num { background: #1e3a5f; color: #38bdf8; }
+    .n2 .topic-num { background: #2d1b69; color: #a78bfa; }
+    .n3 .topic-num { background: #1a2e1a; color: #4ade80; }
+    .n4 .topic-num { background: #2d1a1a; color: #fb923c; }
+    .n5 .topic-num { background: #1a2d2d; color: #2dd4bf; }
+    .n6 .topic-num { background: #2d1b69; color: #e879f9; }
+    .n7 .topic-num { background: #2d1a1a; color: #f97316; }
+    .n8 .topic-num { background: #1e3a5f; color: #60a5fa; }
+    .n9 .topic-num { background: #1a2d2d; color: #34d399; }
+    .n10 .topic-num { background: #2a1f0a; color: #fbbf24; }
+    .n11 .topic-num { background: #2d1a1a; color: #f87171; }
+    .n12 .topic-num { background: #1a2e1a; color: #86efac; }
+    .n13 .topic-num { background: #1e3a5f; color: #93c5fd; }
+    .n14 .topic-num { background: #2d1b69; color: #c4b5fd; }
+    .n15 .topic-num { background: #0c2a0c; color: #4ade80; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">📚 Interview Prep</span>
+  <span class="sep">|</span>
+  <a href="index.html">Main Guide</a>
+  <a href="checklist.html" class="active">✅ Checklist Deep Dive</a>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>✅ Checklist Deep Dive</h1>
+    <p>Each topic explained clearly — read, understand, mark done.</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <p>YOUR PROGRESS</p>
+    <div class="bar-bg"><div class="bar-fill" id="bar" style="width:0%"></div></div>
+    <div class="bar-label" id="bar-label">0 / 15 topics reviewed</div>
+  </div>
+
+  <!-- ─── TOPIC 1 ─── -->
+  <div class="topic n1" id="t1">
+    <div class="topic-header" onclick="toggleTopic('t1')">
+      <div class="topic-num">1</div>
+      <div class="topic-title">
+        <h3>Magento 2 architecture overview (module, layout XML, MVC)</h3>
+        <p>How the whole thing is structured — the mental model you need</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t1')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>The Big Picture — MVC in Magento</h4>
+      <p>MVC = Model, View, Controller. A browser request hits Magento and travels through this chain:</p>
+      <div class="diagram">Browser → index.php → Bootstrap → Router → Controller → (Model + ViewModel) → View (Layout + Template)
+                                                                  ↓
+                                                         Sends HTML back to browser</div>
+
+      <h4>Each Layer Explained Simply</h4>
+      <table>
+        <tr><th>Layer</th><th>What it does</th><th>Where it lives</th></tr>
+        <tr><td><strong>Controller</strong></td><td>Receives the request, decides what to show, never contains business logic</td><td><code>Controller/</code></td></tr>
+        <tr><td><strong>Model</strong></td><td>Database interaction — reads and writes data</td><td><code>Model/</code></td></tr>
+        <tr><td><strong>ViewModel</strong></td><td>PHP logic that prepares data for templates (the Magento-modern way)</td><td><code>ViewModel/</code></td></tr>
+        <tr><td><strong>Layout XML</strong></td><td>Decides which blocks appear on which pages and in what order</td><td><code>view/frontend/layout/</code></td></tr>
+        <tr><td><strong>Template (.phtml)</strong></td><td>The actual HTML with small PHP variables sprinkled in</td><td><code>view/frontend/templates/</code></td></tr>
+      </table>
+
+      <h4>Module — The Unit of Everything</h4>
+      <p>Magento is entirely built from modules. Every feature (catalog, checkout, customer, search) is its own module. Your custom code lives in modules too.</p>
+      <pre>app/code/Vendor/ModuleName/
+├── registration.php        ← tells Magento "this module exists"
+├── etc/
+│   ├── module.xml          ← module name, version, dependencies
+│   ├── di.xml              ← dependency injection config (plugins, preferences)
+│   └── frontend/
+│       ├── di.xml          ← DI config for frontend area
+│       └── routes.xml      ← registers URL routes
+├── Controller/Frontend/
+│   └── Index.php           ← handles GET /myroute/index/index
+├── ViewModel/
+│   └── MyData.php          ← PHP logic for templates
+├── Model/
+│   └── MyModel.php         ← data/business logic
+└── view/frontend/
+    ├── layout/
+    │   └── myroute_index_index.xml   ← layout for that URL
+    └── templates/
+        └── myblock.phtml   ← the HTML template</pre>
+
+      <h4>Layout XML — The Blueprint of Each Page</h4>
+      <p>Layout XML files answer: "Which blocks appear on this page, in what container, in what order?" They're XML files that add/remove/configure blocks.</p>
+      <pre>&lt;page xmlns:xsi="..." xsi:noNamespaceSchemaLocation="..."&gt;
+  &lt;body&gt;
+    &lt;referenceContainer name="content"&gt;
+      &lt;block class="Magento\Framework\View\Element\Template"
+             name="my.block"
+             template="Vendor_Module::myblock.phtml"&gt;
+        &lt;arguments&gt;
+          &lt;argument name="view_model" xsi:type="object"&gt;Vendor\Module\ViewModel\MyData&lt;/argument&gt;
+        &lt;/arguments&gt;
+      &lt;/block&gt;
+    &lt;/referenceContainer&gt;
+  &lt;/body&gt;
+&lt;/page&gt;</pre>
+      <p><strong>File name = page handle</strong> — the filename determines which page it runs on:</p>
+      <ul>
+        <li><code>default.xml</code> → every page</li>
+        <li><code>catalog_product_view.xml</code> → product detail page</li>
+        <li><code>catalog_category_view.xml</code> → category / PLP</li>
+        <li><code>customer_account_index.xml</code> → customer dashboard</li>
+        <li><code>checkout_cart_index.xml</code> → cart page</li>
+      </ul>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"Magento follows MVC — controllers handle routing, models handle data, and ViewModels prepare data for templates. What's unique to Magento is the Layout XML system — XML files that act as a blueprint for each page, declaring which blocks appear where. This separation means the same block can be added or removed on any page just by changing an XML file, without touching PHP."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 2 ─── -->
+  <div class="topic n2" id="t2">
+    <div class="topic-header" onclick="toggleTopic('t2')">
+      <div class="topic-num">2</div>
+      <div class="topic-title">
+        <h3>Plugins (before/after/around) — know how to explain with an example</h3>
+        <p>The most important Magento customization tool</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t2')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>What Is a Plugin?</h4>
+      <p>A Plugin (also called an Interceptor) lets you run your own code <strong>before</strong>, <strong>after</strong>, or <strong>around</strong> any public method in Magento — without modifying the original class.</p>
+      <p>Think of it like wrapping a function. The original function still exists and runs normally — you just get to run code before it, after it, or completely wrap it.</p>
+
+      <h4>Step 1 — Register the Plugin in di.xml</h4>
+      <pre>&lt;!-- app/code/Vendor/Module/etc/di.xml --&gt;
+&lt;type name="Magento\Catalog\Model\Product"&gt;
+  &lt;plugin name="vendor_module_product_plugin"
+          type="Vendor\Module\Plugin\ProductPlugin"
+          sortOrder="10" /&gt;
+&lt;/type&gt;</pre>
+
+      <h4>Step 2 — Write the Plugin Class</h4>
+      <pre>namespace Vendor\Module\Plugin;
+
+class ProductPlugin
+{
+    // BEFORE — runs before getPrice(), can modify the arguments
+    public function beforeGetPrice(\Magento\Catalog\Model\Product $subject): array
+    {
+        // return modified args as array (even if no args, return [])
+        return [];
+    }
+
+    // AFTER — runs after getPrice(), can modify the return value
+    public function afterGetPrice(\Magento\Catalog\Model\Product $subject, float $result): float
+    {
+        // $result = what getPrice() returned
+        return $result * 0.9; // 10% discount on everything
+    }
+
+    // AROUND — wraps the method entirely
+    public function aroundGetPrice(\Magento\Catalog\Model\Product $subject, callable $proceed): float
+    {
+        // $proceed() calls the original method
+        if ($subject->getSku() === 'SPECIAL') {
+            return 0.0; // free item, don't call original
+        }
+        return $proceed(); // normal flow
+    }
+}</pre>
+
+      <table>
+        <tr><th>Plugin type</th><th>Method prefix</th><th>What you can do</th><th>When to use</th></tr>
+        <tr><td><code>before</code></td><td><code>before</code>MethodName</td><td>Modify input arguments</td><td>Validate or transform inputs</td></tr>
+        <tr><td><code>after</code></td><td><code>after</code>MethodName</td><td>Modify the return value</td><td>Add to results, format output</td></tr>
+        <tr><td><code>around</code></td><td><code>around</code>MethodName</td><td>Control everything including whether the original runs</td><td>Rarely — only when before/after aren't enough</td></tr>
+      </table>
+
+      <div class="warn"><p><strong>Avoid around plugins</strong> unless necessary. They're hard to debug, slow performance if overused, and prevent other plugins from stacking cleanly. Always prefer before/after.</p></div>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"A plugin lets me intercept any public method in Magento without touching the original class. For example, if I want to add a 10% discount to product prices for a specific customer group, I write an after-plugin on the getPrice() method. The original method still runs — I just get to modify what it returns. This keeps the core untouched so upgrades never break my customizations."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 3 ─── -->
+  <div class="topic n3" id="t3">
+    <div class="topic-header" onclick="toggleTopic('t3')">
+      <div class="topic-num">3</div>
+      <div class="topic-title">
+        <h3>Events & Observers — difference from plugins</h3>
+        <p>React to things that happen in Magento</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t3')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>The Analogy</h4>
+      <p>Think of events like <strong>notifications</strong>. Magento says "I just did something" — and anyone who signed up to listen gets notified. You write an Observer to be that listener.</p>
+
+      <h4>How It Works — 3 Files</h4>
+      <pre>1. events.xml — subscribe to the event
+&lt;config&gt;
+  &lt;event name="checkout_submit_all_after"&gt;
+    &lt;observer name="vendor_send_confirmation"
+              instance="Vendor\Module\Observer\SendConfirmation"/&gt;
+  &lt;/event&gt;
+&lt;/config&gt;
+
+2. Observer/SendConfirmation.php — your logic
+class SendConfirmation implements ObserverInterface
+{
+    public function execute(Observer $observer): void
+    {
+        $order = $observer->getEvent()->getOrder();
+        // send email, call API, log something, etc.
+    }
+}
+
+3. That's it. Run bin/magento cache:flush and it works.</pre>
+
+      <h4>Common Events You Should Know</h4>
+      <table>
+        <tr><th>Event name</th><th>When it fires</th></tr>
+        <tr><td><code>checkout_submit_all_after</code></td><td>After order is placed</td></tr>
+        <tr><td><code>catalog_product_save_after</code></td><td>After a product is saved in admin</td></tr>
+        <tr><td><code>customer_login</code></td><td>After customer logs in</td></tr>
+        <tr><td><code>customer_register_success</code></td><td>After new customer registers</td></tr>
+        <tr><td><code>sales_order_place_after</code></td><td>After order is placed (similar to above)</td></tr>
+        <tr><td><code>controller_front_send_response_before</code></td><td>Before response is sent (every request)</td></tr>
+      </table>
+
+      <h4>Plugin vs Observer — When to Use Which</h4>
+      <table>
+        <tr><th></th><th>Plugin</th><th>Observer</th></tr>
+        <tr><td><strong>Use when</strong></td><td>You need to intercept a specific method — change its inputs or outputs</td><td>Magento already fires an event at the exact moment you need</td></tr>
+        <tr><td><strong>Can modify return?</strong></td><td>✅ Yes</td><td>❌ No — just react</td></tr>
+        <tr><td><strong>Needs specific trigger?</strong></td><td>Works on any public method</td><td>Must be an event Magento fires</td></tr>
+        <tr><td><strong>Best for</strong></td><td>Changing how something works</td><td>Reacting after something happened</td></tr>
+      </table>
+
+      <div class="tip"><p><strong>Rule of thumb:</strong> If Magento fires an event at the exact right moment → use an observer. If not, or if you need to change a return value → use a plugin.</p></div>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"Events and Observers are Magento's pub/sub system. Magento fires events at key moments — like after an order is placed — and I write an Observer to react to that event without touching the original checkout code. The difference from plugins is that plugins intercept a method and can modify its output; observers just react to a broadcast and can't change what already happened."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 4 ─── -->
+  <div class="topic n4" id="t4">
+    <div class="topic-header" onclick="toggleTopic('t4')">
+      <div class="topic-num">4</div>
+      <div class="topic-title">
+        <h3>Dependency Injection — what it is, why Magento uses it</h3>
+        <p>The pattern that makes Magento's code testable and flexible</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t4')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>The Problem DI Solves</h4>
+      <p>Without DI, you'd write: <code>$repo = new ProductRepository();</code>. This hard-codes the dependency — you can't swap it, test with a mock, or configure it differently per environment.</p>
+      <p>With DI, you declare what you <em>need</em> in the constructor, and Magento creates and injects it for you.</p>
+
+      <div class="grid-2">
+        <div>
+          <p><strong>Without DI (bad):</strong></p>
+          <pre>class MyClass {
+  public function getData() {
+    // hard-coded, can't swap it
+    $repo = new ProductRepository();
+    return $repo->getList(...);
+  }
+}</pre>
+        </div>
+        <div>
+          <p><strong>With DI (Magento way):</strong></p>
+          <pre>class MyClass {
+  public function __construct(
+    private readonly ProductRepositoryInterface $repo
+  ) {}
+
+  public function getData() {
+    return $this->repo->getList(...);
+  }
+}</pre>
+        </div>
+      </div>
+
+      <h4>How Magento Knows What to Inject</h4>
+      <p>Magento reads <code>di.xml</code> files and its own type definitions. If you type-hint an interface, Magento looks up which concrete class implements it (set in <code>di.xml</code> via <code>&lt;preference&gt;</code>).</p>
+      <pre>&lt;!-- di.xml — tell Magento: when someone asks for the interface, give them this class --&gt;
+&lt;preference for="Magento\Catalog\Api\ProductRepositoryInterface"
+            type="Magento\Catalog\Model\ProductRepository"/&gt;</pre>
+
+      <h4>Why This Matters</h4>
+      <ul>
+        <li><strong>Testable</strong> — in unit tests you inject a mock instead of the real class</li>
+        <li><strong>Swappable</strong> — want to replace Magento's search with Algolia? Register a preference in di.xml, no code changes needed</li>
+        <li><strong>Configurable</strong> — different implementations per area (frontend vs adminhtml)</li>
+        <li><strong>Single Responsibility</strong> — each class has one job; dependencies are provided externally</li>
+      </ul>
+
+      <div class="tip"><p><strong>Always inject interfaces, not concrete classes.</strong> <code>ProductRepositoryInterface</code> not <code>ProductRepository</code>. This is the Magento convention and it's enforced in code reviews.</p></div>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"Dependency Injection means a class declares what it needs in its constructor, and Magento's Object Manager provides those dependencies automatically. Instead of writing 'new ProductRepository()' inside my class, I type-hint the interface in the constructor and Magento injects the right implementation. This makes code testable, loosely coupled, and easy to extend — which is why all of Magento is built this way."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 5 ─── -->
+  <div class="topic n5" id="t5">
+    <div class="topic-header" onclick="toggleTopic('t5')">
+      <div class="topic-num">5</div>
+      <div class="topic-title">
+        <h3>Data Patches — when to use, gotchas (never modify deployed)</h3>
+        <p>How to install database data as part of your module</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t5')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>What Is a Data Patch?</h4>
+      <p>A Data Patch is a PHP class that runs <strong>once</strong> when you run <code>bin/magento setup:upgrade</code>. After it runs, Magento records it in the <code>patch_list</code> table so it never runs again.</p>
+      <p><strong>Use it for:</strong> creating CMS blocks/pages, inserting config values, adding product attributes, seeding data your module needs.</p>
+
+      <h4>Basic Structure</h4>
+      <pre>namespace Vendor\Module\Setup\Patch\Data;
+
+use Magento\Framework\Setup\Patch\DataPatchInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
+
+class AddWelcomeBlock implements DataPatchInterface
+{
+    public function __construct(
+        private readonly ModuleDataSetupInterface $moduleDataSetup,
+        private readonly \Magento\Cms\Model\BlockFactory $blockFactory
+    ) {}
+
+    public function apply(): void
+    {
+        $this->moduleDataSetup->startSetup();
+
+        $this->blockFactory->create()->setData([
+            'identifier' => 'welcome-banner',
+            'title'      => 'Welcome Banner',
+            'content'    => '&lt;p&gt;Welcome!&lt;/p&gt;',
+            'is_active'  => 1,
+        ])->save();
+
+        $this->moduleDataSetup->endSetup();
+    }
+
+    // If this patch depends on another patch running first:
+    public static function getDependencies(): array
+    {
+        return [SomeOtherPatch::class];
+    }
+
+    public function getAliases(): array { return []; }
+}</pre>
+
+      <h4>The One Rule You Must Know</h4>
+      <div class="warn"><p><strong>NEVER modify a patch that has already been deployed to production.</strong> Once it's in <code>patch_list</code>, Magento won't run it again. If you edit it, only developers who delete it from the DB manually will see the change. Everyone else gets nothing — silently broken data.</p></div>
+      <p><strong>The right way:</strong> Create a <strong>new</strong> patch that depends on the original:</p>
+      <pre>// NEW patch — don't touch the original
+class UpdateWelcomeBlock implements DataPatchInterface
+{
+    public static function getDependencies(): array
+    {
+        return [AddWelcomeBlock::class]; // runs after the first one
+    }
+    // update the block here
+}</pre>
+
+      <h4>Other Patch Types</h4>
+      <ul>
+        <li><strong>Data Patch</strong> — inserts/modifies database records (what you use 99% of the time)</li>
+        <li><strong>Schema Patch</strong> — modifies database table structure (add column, add index) — use only when <code>db_schema.xml</code> declarative schema can't do what you need</li>
+      </ul>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"Data Patches are how I install database data as part of a module — CMS blocks, configuration values, product attributes. They run once via setup:upgrade and are tracked in the database. The critical rule is never modify a patch after it's been deployed — you create a new one instead, because the old one is already recorded as 'done' in every environment."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 6 ─── -->
+  <div class="topic n6" id="t6">
+    <div class="topic-header" onclick="toggleTopic('t6')">
+      <div class="topic-num">6</div>
+      <div class="topic-title">
+        <h3>Hyvä theme — what it replaces, performance numbers, Alpine.js basics</h3>
+        <p>Your core frontend expertise — explain it clearly</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t6')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>What Hyvä Replaces</h4>
+      <table>
+        <tr><th>Default Magento (Luma)</th><th>Hyvä</th></tr>
+        <tr><td>RequireJS — async module loader, lots of overhead</td><td>❌ Gone — plain JS or Alpine.js</td></tr>
+        <tr><td>KnockoutJS — old MVVM framework (2010s tech)</td><td>❌ Gone — Alpine.js</td></tr>
+        <tr><td>Bootstrap 3 CSS (heavy, hard to customize)</td><td>❌ Gone — TailwindCSS</td></tr>
+        <tr><td>JS bundle: 800KB–1.2MB</td><td>JS bundle: ~40KB</td></tr>
+        <tr><td>Lighthouse score: 30–50</td><td>Lighthouse score: 85–100</td></tr>
+        <tr><td>Very hard to customize frontend</td><td>Standard HTML/CSS/JS — easy</td></tr>
+      </table>
+
+      <h4>Alpine.js — The 10 Things You Must Know</h4>
+      <pre>&lt;!-- 1. x-data — declare reactive state --&gt;
+&lt;div x-data="{ count: 0, isOpen: false }"&gt;
+
+  &lt;!-- 2. @click / x-on:click — event listener --&gt;
+  &lt;button @click="count++"&gt;Increment&lt;/button&gt;
+
+  &lt;!-- 3. x-text — reactive text content --&gt;
+  &lt;span x-text="count"&gt;&lt;/span&gt;
+
+  &lt;!-- 4. x-show — show/hide (keeps DOM, uses display:none) --&gt;
+  &lt;div x-show="isOpen"&gt;Hidden content&lt;/div&gt;
+
+  &lt;!-- 5. x-if — conditional (removes from DOM entirely) --&gt;
+  &lt;template x-if="count > 5"&gt;&lt;div&gt;High count!&lt;/div&gt;&lt;/template&gt;
+
+  &lt;!-- 6. x-for — loop --&gt;
+  &lt;template x-for="item in items" :key="item.id"&gt;
+    &lt;div x-text="item.name"&gt;&lt;/div&gt;
+  &lt;/template&gt;
+
+  &lt;!-- 7. :attr / x-bind — dynamic attribute --&gt;
+  &lt;img :src="imageUrl" :class="{ 'hidden': !isOpen }"&gt;
+
+  &lt;!-- 8. x-model — two-way form binding --&gt;
+  &lt;input x-model="searchQuery"&gt;
+
+  &lt;!-- 9. $dispatch — fire a custom event --&gt;
+  &lt;button @click="$dispatch('add-to-cart', { sku: 'ABC' })"&gt;
+
+  &lt;!-- 10. x-cloak — hide until Alpine loads (prevents flash) --&gt;
+  &lt;div x-cloak x-show="isOpen"&gt;...&lt;/div&gt;
+&lt;/div&gt;</pre>
+
+      <h4>Alpine.data() — Reusable Components (Used in Your Projects)</h4>
+      <pre>// Define once (in a JS file or &lt;script&gt; tag)
+Alpine.data('productGallery', () => ({
+  activeImage: 0,
+  images: [],
+
+  init() {
+    this.images = JSON.parse(this.$el.dataset.images);
+  },
+
+  selectImage(index) {
+    this.activeImage = index;
+  }
+}));
+
+// Use anywhere in templates
+&lt;div x-data="productGallery()" data-images='[...]'&gt;
+  &lt;img :src="images[activeImage].url"&gt;
+  &lt;template x-for="(img, i) in images"&gt;
+    &lt;button @click="selectImage(i)"&gt;&lt;/button&gt;
+  &lt;/template&gt;
+&lt;/div&gt;</pre>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"Hyvä replaces Magento's old Luma stack — which used RequireJS and KnockoutJS — with Alpine.js and TailwindCSS. The result is dramatic: a JavaScript bundle that shrinks from 800KB to about 40KB, and Google Lighthouse scores that jump from the 30s to 90+. I've been building with Hyvä since my first project at Scandiweb — I even contributed to an open-source Hyvä starter theme that other teams build on top of."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 7 ─── -->
+  <div class="topic n7" id="t7">
+    <div class="topic-header" onclick="toggleTopic('t7')">
+      <div class="topic-num">7</div>
+      <div class="topic-title">
+        <h3>B2B vs B2C — core differences + your Sports Group Denmark story</h3>
+        <p>You built B2B — tell it with conviction</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t7')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>The Core Difference in One Sentence</h4>
+      <p>In B2C, the customer is a person. In B2B, the customer is a <strong>company with multiple users, roles, and rules</strong>.</p>
+
+      <h4>Side-by-Side Comparison</h4>
+      <table>
+        <tr><th>Area</th><th>B2C (Consumer)</th><th>B2B (Business)</th></tr>
+        <tr><td>Account</td><td>Single person</td><td>Company + multiple users + roles (buyer, approver, admin)</td></tr>
+        <tr><td>Pricing</td><td>Same price for everyone</td><td>Custom price per company, tier pricing, negotiated quotes</td></tr>
+        <tr><td>Catalog</td><td>All products visible</td><td>Restricted catalogs — Company A sees different products than Company B</td></tr>
+        <tr><td>Checkout</td><td>Credit card, instant</td><td>Purchase orders, credit lines, approval workflows</td></tr>
+        <tr><td>Order quantities</td><td>1–3 units typically</td><td>Bulk orders, minimum quantities, pallet quantities</td></tr>
+        <tr><td>Reorder</td><td>Occasional</td><td>Regular, same products — requisition lists</td></tr>
+        <tr><td>Negotiation</td><td>None</td><td>Quote requests, negotiable prices</td></tr>
+      </table>
+
+      <h4>Magento B2B Modules</h4>
+      <ul>
+        <li><strong>Magento_Company</strong> — company accounts, user roles within a company</li>
+        <li><strong>Magento_SharedCatalog</strong> — show different products/prices to different companies</li>
+        <li><strong>Magento_NegotiableQuote</strong> — customer requests a custom quote, sales rep negotiates</li>
+        <li><strong>Magento_PurchaseOrder</strong> — order approval workflows (manager must approve large orders)</li>
+        <li><strong>Magento_Requisition</strong> — saved shopping lists for repeat orders</li>
+        <li><strong>Magento_QuickOrder</strong> — paste a list of SKUs to order in bulk</li>
+      </ul>
+
+      <h4>Your Sports Group Denmark Story (Practice This)</h4>
+      <div class="say">
+        <div class="say-label">Your story</div>
+        <p>"At Sports Group Denmark I built a full B2B platform for a Danish sports equipment company. Their customers are sports clubs and retailers — companies, not individuals. After a company logs in, they need to select which store or region they're purchasing for. I built that post-login store selector as a custom Magento module — it hooks into the login flow, checks the company's assigned stores, and redirects them to the right selection page.</p>
+        <p>I also built the entire product listing page from scratch: grid and list views, the Amasty ShopBy layered navigation for filtering, pagination, and the full customer account area — orders, profile, addresses — all styled with Hyvä, Alpine.js, and TailwindCSS. That project spanned 11 tickets and 3 new Magento modules."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 8 ─── -->
+  <div class="topic n8" id="t8">
+    <div class="topic-header" onclick="toggleTopic('t8')">
+      <div class="topic-num">8</div>
+      <div class="topic-title">
+        <h3>Your 3 main project stories (SGD, Gemoss, Satoshi)</h3>
+        <p>The narrative that proves you're the right hire</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t8')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>Story Formula: Situation → What You Built → Result/Impact</h4>
+
+      <h4>Story 1: Sports Group Denmark (B2B — your strongest card)</h4>
+      <div class="say">
+        <div class="say-label">Practice this out loud</div>
+        <p>"Sports Group Denmark is a Danish sporting goods company. Their platform is B2B — customers are clubs and retailers, not individuals. I joined to build out the storefront on Magento 2 with Hyvä theme.</p>
+        <p>My main contributions: I built the entire product listing page from scratch — both grid and list views with a toggle, Amasty layered navigation for filtering, and pagination. I also built a post-login store selector (companies need to pick their store/region after login), restyled the full customer account area, and created auth pages. That's 11 tickets and 3 custom Magento modules."</p>
+      </div>
+
+      <h4>Story 2: Gemoss (Full Storefront, Shows Breadth)</h4>
+      <div class="say">
+        <div class="say-label">Practice this out loud</div>
+        <p>"Gemoss is a Latvian B2C e-commerce store. I built most of their storefront on Magento 2 with Hyvä. The biggest technical piece was the Algolia search integration — replacing Magento's default slow search with Algolia's fast, typo-tolerant search engine. I built the autocomplete dropdown and the full search results page.</p>
+        <p>I also built the PLP with a quick-shop modal (users can add to cart without leaving the listing page), a subcategory carousel, hero slider via Page Builder, and set up Amasty Shop By Brand. That was 20 tickets across multiple modules."</p>
+      </div>
+
+      <h4>Story 3: Satoshi Hyvä Theme (Shows Depth)</h4>
+      <div class="say">
+        <div class="say-label">Practice this out loud</div>
+        <p>"Satoshi is Scandiweb's open-source Magento 2 starter theme built on Hyvä. It's what other Scandiweb projects bootstrap from. I contributed to its core — building reusable components with Alpine.js, TypeScript, and TailwindCSS. Working on a shared foundation used by multiple client projects means the code has to be clean, generic, and well-structured. It gave me a deep understanding of how the Hyvä theme works at the architectural level, not just the feature level."</p>
+      </div>
+
+      <h4>Bonus: J.R. Dunn (Team Lead Experience)</h4>
+      <div class="say">
+        <div class="say-label">Use when asked about leadership</div>
+        <p>"At J.R. Dunn, a luxury jewelry retailer, I was the frontend team lead for a Magento 1 to Shopify migration. I ran daily syncs with junior developers, reviewed their work, and coordinated with seniors to deliver on time. It was my first experience leading a team and coordinating across multiple people toward a single deadline."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 9 ─── -->
+  <div class="topic n9" id="t9">
+    <div class="topic-header" onclick="toggleTopic('t9')">
+      <div class="topic-num">9</div>
+      <div class="topic-title">
+        <h3>GCP services overview (Compute, Cloud SQL, Storage, CDN, Load Balancer)</h3>
+        <p>Infrastructure for a production Magento store on Google Cloud</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t9')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>What GCP Is</h4>
+      <p>Google Cloud Platform is Google's cloud — like AWS but from Google. You rent virtual servers, databases, and services instead of owning hardware.</p>
+
+      <h4>The Services That Matter for Magento</h4>
+      <table>
+        <tr><th>GCP Service</th><th>What it is</th><th>How you use it for Magento</th></tr>
+        <tr><td><strong>Compute Engine</strong></td><td>Virtual Machine (VM) — a rented Linux server</td><td>Run Nginx + PHP-FPM + Redis + your Magento code here</td></tr>
+        <tr><td><strong>Cloud SQL</strong></td><td>Managed MySQL database</td><td>Store all Magento data (products, orders, customers) here — Google handles backups, patches, failover</td></tr>
+        <tr><td><strong>Cloud Storage</strong></td><td>File storage (like S3)</td><td>Store product images, media uploads — served to users fast</td></tr>
+        <tr><td><strong>Cloud CDN</strong></td><td>Content Delivery Network</td><td>Cache static files (JS, CSS, images) on edge servers near users — faster page loads globally</td></tr>
+        <tr><td><strong>Cloud Load Balancing</strong></td><td>Distributes traffic</td><td>Route requests to multiple VMs when one isn't enough — also handles SSL termination</td></tr>
+        <tr><td><strong>IAM</strong></td><td>Identity & Access Management</td><td>Control who (humans + services) can access what. Least-privilege principle: give only what's needed</td></tr>
+        <tr><td><strong>Cloud Monitoring</strong></td><td>Metrics + alerts</td><td>Get alerted when CPU spikes, disk fills, error rate rises — before customers complain</td></tr>
+      </table>
+
+      <h4>Architecture for a Magento Store on GCP</h4>
+      <div class="diagram">Users
+  ↓
+[Cloudflare] — WAF + DDoS + CDN
+  ↓
+[GCP Cloud Load Balancer] — SSL termination, routes to VMs
+  ↓
+[Compute Engine VMs] — Ubuntu, Nginx, PHP 8.2, Redis
+  ↓                ↓
+[Cloud SQL]    [Cloud Storage]
+MySQL 8.0      pub/media/ files</div>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"My primary background is Magento development, but I know how to set up and manage a production environment on GCP. For Magento, the key services are Compute Engine for the PHP/Nginx server, Cloud SQL for MySQL — because it handles backups and failover automatically — Cloud Storage for media files, and Cloud CDN for static assets. As the store grows, Cloud Load Balancing lets us scale horizontally by adding more VMs without downtime."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 10 ─── -->
+  <div class="topic n10" id="t10">
+    <div class="topic-header" onclick="toggleTopic('t10')">
+      <div class="topic-num">10</div>
+      <div class="topic-title">
+        <h3>Cloudflare — CDN, WAF, DDoS, SSL in one sentence each</h3>
+        <p>The protective + performance layer in front of your store</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t10')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>What Cloudflare Is</h4>
+      <p>Cloudflare sits between the internet and your server. Every request goes through Cloudflare first. It can block bad traffic, cache content, and serve files faster — all before the request ever reaches your server.</p>
+      <div class="diagram">User's browser
+      ↓
+[Cloudflare edge server — nearest to user]
+  ✅ DDoS attack? Absorbed here.
+  ✅ SQL injection attempt? Blocked by WAF.
+  ✅ Static file? Served from cache here — fast.
+  ✅ Dynamic page? Passed through to your server.
+      ↓
+[Your Magento server on GCP]</div>
+
+      <h4>One Sentence per Feature</h4>
+      <table>
+        <tr><th>Feature</th><th>One sentence</th></tr>
+        <tr><td><strong>CDN</strong></td><td>Caches static files (images, CSS, JS) on servers near your users so they load fast from anywhere in the world.</td></tr>
+        <tr><td><strong>WAF</strong> (Web App Firewall)</td><td>Inspects every request and blocks known attack patterns — SQL injection, XSS, credential stuffing — before they reach Magento.</td></tr>
+        <tr><td><strong>DDoS Protection</strong></td><td>Absorbs massive floods of fake traffic (millions of requests/second) so your store stays online during attacks.</td></tr>
+        <tr><td><strong>SSL/TLS</strong></td><td>Free HTTPS certificates with automatic renewal, and Cloudflare enforces HTTPS redirects so no customer ever browses on plain HTTP.</td></tr>
+        <tr><td><strong>Bot Management</strong></td><td>Identifies and blocks bots that scrape your prices, fake add-to-cart to deplete inventory, or try credential stuffing on customer accounts.</td></tr>
+        <tr><td><strong>Page Rules / Cache Rules</strong></td><td>Fine-tune what Cloudflare caches — e.g., cache category pages for 1 hour but never cache checkout pages.</td></tr>
+      </table>
+
+      <div class="tip"><p><strong>Important for Magento:</strong> Bypass Cloudflare cache for cart, checkout, and customer-account pages. These are dynamic (personalized per user) — caching them would show the wrong data. Use page rules to set "Cache Level: Bypass" on <code>/checkout/*</code>, <code>/customer/*</code>, <code>/cart</code>.</p></div>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"Cloudflare is a protective and performance layer that sits in front of the server. The CDN caches static files globally so they load fast everywhere. The WAF blocks attacks like SQL injection before they hit Magento. DDoS protection absorbs traffic floods. And SSL certificates are free and auto-renewed. For Magento, the key setup detail is making sure dynamic pages like checkout are excluded from caching."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 11 ─── -->
+  <div class="topic n11" id="t11">
+    <div class="topic-header" onclick="toggleTopic('t11')">
+      <div class="topic-num">11</div>
+      <div class="topic-title">
+        <h3>Security basics — OWASP top issues + Magento fixes</h3>
+        <p>The vulnerabilities that matter for e-commerce</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t11')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>OWASP Top 10 — The E-Commerce Ones That Matter</h4>
+      <table>
+        <tr><th>Vulnerability</th><th>What it is</th><th>How Magento handles it</th></tr>
+        <tr><td><strong>SQL Injection</strong></td><td>Attacker injects SQL code via forms to read/destroy your DB</td><td>Magento's ORM (models, collections, repositories) uses parameterized queries automatically. <strong>Never</strong> concatenate user input into raw SQL.</td></tr>
+        <tr><td><strong>XSS</strong> (Cross-Site Scripting)</td><td>Attacker injects malicious JS into pages that runs in other users' browsers</td><td>Always use <code>$block->escapeHtml()</code>, <code>escapeUrl()</code>, <code>escapeJs()</code> in .phtml templates. Magento blocks SVG uploads by default (SVGs can contain JS).</td></tr>
+        <tr><td><strong>Broken Auth</strong></td><td>Weak passwords, no 2FA, session hijacking</td><td>Change admin URL from <code>/admin</code> to custom path. Enable 2FA (Magento has built-in Google Authenticator). Strong password policy. Restrict admin to specific IPs.</td></tr>
+        <tr><td><strong>CSRF</strong></td><td>Tricking a logged-in user into submitting a malicious form</td><td>Magento adds CSRF tokens to all forms automatically — verify your custom forms use the CSRF form key.</td></tr>
+        <tr><td><strong>Sensitive Data Exposure</strong></td><td>Credit card data, passwords stored in plain text</td><td>Use hosted payment gateways (Stripe, Paymob) — card data never touches your server. Magento hashes passwords with bcrypt.</td></tr>
+        <tr><td><strong>Security Misconfiguration</strong></td><td>Debug mode on in production, default admin URL, error messages showing stack traces</td><td>Deploy in production mode (<code>bin/magento deploy:mode:set production</code>), hide error details, restrict file permissions.</td></tr>
+      </table>
+
+      <h4>Magento-Specific Security Checklist</h4>
+      <ul>
+        <li>✅ Custom admin URL (e.g., <code>/backend-xyz123</code> not <code>/admin</code>)</li>
+        <li>✅ Two-Factor Authentication enabled for all admin users</li>
+        <li>✅ Run in production mode — never developer mode on live</li>
+        <li>✅ Apply security patches within days of release (subscribe to Adobe security alerts)</li>
+        <li>✅ Correct file permissions: <code>664</code> for files, <code>775</code> for directories</li>
+        <li>✅ No SVG upload without explicit security review</li>
+        <li>✅ HTTPS enforced everywhere</li>
+        <li>✅ Hosted payment gateway — card data never on your server</li>
+        <li>✅ Regularly audit installed third-party extensions (they're attack vectors)</li>
+      </ul>
+
+      <h4>PCI DSS in Simple Terms</h4>
+      <p>PCI DSS = Payment Card Industry Data Security Standard. Rules for anyone who handles credit card data. The easy way to comply: <strong>don't handle card data at all</strong>. Use a hosted/tokenized payment gateway where customers enter card details on the provider's secure page (iFrame or redirect). Your server only sees a token — never the actual card number.</p>
+
+      <h4>GDPR in Simple Terms</h4>
+      <p>GDPR = European data protection law. For an e-commerce store: show a cookie consent banner, allow customers to request their data be deleted, document what data you store and why, and don't send marketing emails without explicit opt-in.</p>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"Security in Magento has a few layers. At the code level, I always use Magento's escaping methods in templates to prevent XSS, and the ORM for database queries to prevent SQL injection. At the platform level: custom admin URL, 2FA, production mode, and applying security patches quickly. For payments, I'd always use a hosted gateway so card data never touches our server — that alone dramatically reduces PCI DSS scope. And Cloudflare's WAF adds another layer by blocking known attack signatures at the edge."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 12 ─── -->
+  <div class="topic n12" id="t12">
+    <div class="topic-header" onclick="toggleTopic('t12')">
+      <div class="topic-num">12</div>
+      <div class="topic-title">
+        <h3>REST vs GraphQL — when to use each</h3>
+        <p>Two ways external systems talk to Magento</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t12')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>What They Both Do</h4>
+      <p>Both REST and GraphQL are APIs that let external systems (mobile apps, ERPs, dashboards, headless frontends) read and write Magento data over HTTP.</p>
+
+      <h4>Side-by-Side</h4>
+      <table>
+        <tr><th></th><th>REST API</th><th>GraphQL API</th></tr>
+        <tr><td><strong>URL structure</strong></td><td>Multiple endpoints: <code>/rest/V1/products</code>, <code>/rest/V1/orders</code></td><td>Single endpoint: <code>/graphql</code></td></tr>
+        <tr><td><strong>What you get back</strong></td><td>The full object — even fields you don't need</td><td>Exactly the fields you asked for — nothing more</td></tr>
+        <tr><td><strong>Multiple requests</strong></td><td>Need separate requests for related data</td><td>One request can fetch nested related data</td></tr>
+        <tr><td><strong>Authentication</strong></td><td>Admin token or customer token in header</td><td>Same — token in Authorization header</td></tr>
+        <tr><td><strong>Best for</strong></td><td>ERP integrations, backend scripts, simple CRUD</td><td>PWA/headless frontends, React/Vue apps, mobile</td></tr>
+        <tr><td><strong>Your experience</strong></td><td>Working with middleware/ERP integrations</td><td>JolaUSA — Venia PWA consumed Magento's GraphQL</td></tr>
+      </table>
+
+      <h4>REST Example — Get a Product</h4>
+      <pre># GET /rest/V1/products/SKU001
+# Authorization: Bearer your-token-here
+
+# Response: the FULL product object (many fields you may not need)
+{
+  "id": 1,
+  "sku": "SKU001",
+  "name": "Product Name",
+  "attribute_set_id": 4,
+  "price": 99.99,
+  "status": 1,
+  "visibility": 4,
+  "type_id": "simple",
+  "created_at": "...",
+  "extension_attributes": { ... }
+  // ... 30+ more fields
+}</pre>
+
+      <h4>GraphQL Example — Get Only What You Need</h4>
+      <pre># POST /graphql
+{
+  products(filter: { sku: { eq: "SKU001" } }) {
+    items {
+      name
+      price_range {
+        minimum_price {
+          regular_price { value currency }
+        }
+      }
+      thumbnail { url label }
+    }
+  }
+}
+# Response: only name, price, and thumbnail — nothing else</pre>
+
+      <div class="say">
+        <div class="say-label">Say in interview</div>
+        <p>"Magento exposes both REST and GraphQL APIs. REST is great for server-to-server integrations like ERP or logistics systems — straightforward CRUD over specific endpoints. GraphQL is better for frontend applications because you request exactly the fields you need, reducing payload size. I've used both — I worked with Magento's GraphQL API at JolaUSA where I was building a React-based PWA using the Venia framework."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 13 ─── -->
+  <div class="topic n13" id="t13">
+    <div class="topic-header" onclick="toggleTopic('t13')">
+      <div class="topic-num">13</div>
+      <div class="topic-title">
+        <h3>Practice "tell me about yourself" (90 seconds, smooth)</h3>
+        <p>The first impression that sets the tone for the whole interview</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t13')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>The Structure (90 Seconds)</h4>
+      <ol>
+        <li><strong>Who you are</strong> (10 sec) — name, role, years of experience</li>
+        <li><strong>Where you worked</strong> (20 sec) — Scandiweb context, what kind of work</li>
+        <li><strong>What you built</strong> (40 sec) — 2 strong examples with specifics</li>
+        <li><strong>Why you're here</strong> (20 sec) — why this role excites you</li>
+      </ol>
+
+      <h4>Your Script — Practice Out Loud Until It Flows</h4>
+      <div class="say">
+        <div class="say-label">Your full answer — memorize the structure, not word-for-word</div>
+        <p>"I'm Mohamed, a Magento 2 developer with almost two years of experience at Scandiweb — which is one of the largest Magento agencies in the world. During that time I worked on multiple real client projects building high-performance e-commerce stores using Magento 2 with the Hyvä theme.</p>
+        <p>Two projects I'm most proud of: At Sports Group Denmark, I built a full B2B platform for a Danish company — I built the product listing page from scratch, created a post-login store selector for B2B company management, and developed three custom Magento modules. At Gemoss, a Latvian e-commerce store, I integrated Algolia search — replacing Magento's default search with a fast, real-time search experience — and built most of their storefront.</p>
+        <p>I also contributed to an open-source Hyvä starter theme that other development teams build on — which means I understand the framework at an architectural level.</p>
+        <p>This role excites me because it's a chance to own a full platform from scratch — design the architecture, make the technical decisions, and build something that scales. That's exactly the kind of challenge I want at this stage of my career."</p>
+      </div>
+
+      <div class="tip" style="margin-top: 12px"><p><strong>After practicing:</strong> Record yourself on your phone. Listen back. Are you speaking clearly? Too fast? Any filler words (um, like, you know)? Fix those before Thursday.</p></div>
+
+      <h4>Common Nerves — How to Handle Them</h4>
+      <ul>
+        <li><strong>Blanking on a word:</strong> Pause briefly, take a breath, continue. Silence is better than filler words.</li>
+        <li><strong>Asked something you don't know:</strong> "I haven't used that specific thing directly, but based on how I'd approach it..." — shows thinking ability.</li>
+        <li><strong>Question is unclear:</strong> "Can you tell me a bit more about what you mean?" — asking for clarification is smart, not weak.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 14 ─── -->
+  <div class="topic n14" id="t14">
+    <div class="topic-header" onclick="toggleTopic('t14')">
+      <div class="topic-num">14</div>
+      <div class="topic-title">
+        <h3>Prepare 4–5 questions to ask them</h3>
+        <p>Questions that show you think like a senior developer</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t14')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>Why Asking Questions Matters</h4>
+      <p>Good questions signal that you're thinking about the job seriously — not just trying to get hired, but figuring out if it's the right fit. It also shows senior developer thinking: you understand what makes projects succeed or fail.</p>
+
+      <h4>Your 5 Questions (Ranked by Impact)</h4>
+
+      <div class="say">
+        <div class="say-label">Question 1 — Platform status (critical to understand scope)</div>
+        <p>"What's the current state of the platform — are we starting completely from scratch with a new codebase, or is there existing code or infrastructure I'd be taking over?"</p>
+      </div>
+
+      <div class="say">
+        <div class="say-label">Question 2 — Third-party integrations (this is where complexity lives)</div>
+        <p>"What third-party systems will the platform need to integrate with — ERP, inventory management, logistics providers, payment gateways?"</p>
+      </div>
+
+      <div class="say">
+        <div class="say-label">Question 3 — Timeline (helps you understand priorities)</div>
+        <p>"What's the expected timeline for the first version to go live? And are there specific features that need to be there at launch?"</p>
+      </div>
+
+      <div class="say">
+        <div class="say-label">Question 4 — Communication structure (you'll be solo — this matters)</div>
+        <p>"Since this is a standalone developer role, who would I be coordinating with for requirements — directly with the business team, or is there a product manager or project coordinator in between?"</p>
+      </div>
+
+      <div class="say">
+        <div class="say-label">Question 5 — Infrastructure (to gauge how much ops work you'll own)</div>
+        <p>"Is GCP already provisioned, or would setting up the infrastructure be part of my responsibilities from day one?"</p>
+      </div>
+
+      <div class="tip"><p><strong>Don't ask about salary in the first interview</strong> (unless they bring it up). Save that for when they make an offer or ask you directly.</p></div>
+
+      <h4>Questions to Avoid</h4>
+      <ul>
+        <li>"What does the company do?" — you should know this already</li>
+        <li>"What are the working hours?" — too early, sounds like you're checking the minimum</li>
+        <li>"Is there room for promotion?" — too soon, sounds presumptuous</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC 15 ─── -->
+  <div class="topic n15" id="t15">
+    <div class="topic-header" onclick="toggleTopic('t15')">
+      <div class="topic-num">15</div>
+      <div class="topic-title">
+        <h3>Salary answer ready (60K EGP + benefits + insurance)</h3>
+        <p>Say it with confidence — you know your value</p>
+      </div>
+      <div class="topic-status">
+        <button class="done-btn" onclick="markDone(event,'t15')">✓ Done</button>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <h4>Your Numbers</h4>
+      <ul>
+        <li><strong>Last salary:</strong> ~1,000 USD / month (at Scandiweb)</li>
+        <li><strong>Expected:</strong> 60,000 EGP / month</li>
+        <li><strong>Must-have benefit:</strong> Social insurance (تأمينات اجتماعية)</li>
+      </ul>
+
+      <h4>How to Say It (Confident, Not Desperate)</h4>
+      <div class="say">
+        <div class="say-label">When they ask "What's your expected salary?"</div>
+        <p>"Based on my experience — almost two years at Scandiweb working on multiple B2B and B2C Magento 2 projects — and the scope of this role as a standalone developer building a platform from scratch, I'm looking for 60,000 EGP per month, plus social insurance."</p>
+      </div>
+
+      <div class="say">
+        <div class="say-label">If they push back / say that's high</div>
+        <p>"I understand. I want to be transparent — my last salary was around 1,000 USD. Given that this is a full ownership role — architecture, development, infrastructure, security — I believe 60,000 EGP reflects the value and responsibility. That said, I'm open to discussing the total package."</p>
+      </div>
+
+      <div class="say">
+        <div class="say-label">If they ask about the previous salary specifically</div>
+        <p>"At Scandiweb, my last salary was around 1,000 US dollars. I'm looking for growth with this move, given the increased responsibility."</p>
+      </div>
+
+      <h4>Why Social Insurance Matters (Beyond the Money)</h4>
+      <ul>
+        <li>Government-mandated employee protection</li>
+        <li>Health coverage through the government system</li>
+        <li>Pension contributions for the long term</li>
+        <li>Legal requirement for the employer — asking for it is completely professional</li>
+      </ul>
+
+      <div class="tip"><p><strong>Mindset:</strong> You're not begging for a job. You have a specialized skill (Magento 2 + Hyvä) that is genuinely rare in Egypt. Only 26 people applied to this role — most won't have your experience. Walk in knowing that.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleTopic(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+function markDone(e, id) {
+  e.stopPropagation();
+  const el = document.getElementById(id);
+  el.classList.toggle('checked');
+  saveProgress();
+  updateBar();
+}
+
+function saveProgress() {
+  const done = [];
+  for (let i = 1; i <= 15; i++) {
+    const el = document.getElementById('t' + i);
+    if (el && el.classList.contains('checked')) done.push(i);
+  }
+  localStorage.setItem('checklist-done', JSON.stringify(done));
+}
+
+function loadProgress() {
+  const saved = localStorage.getItem('checklist-done');
+  if (!saved) return;
+  JSON.parse(saved).forEach(i => {
+    const el = document.getElementById('t' + i);
+    if (el) el.classList.add('checked');
+  });
+}
+
+function updateBar() {
+  let count = 0;
+  for (let i = 1; i <= 15; i++) {
+    const el = document.getElementById('t' + i);
+    if (el && el.classList.contains('checked')) count++;
+  }
+  const pct = Math.round((count / 15) * 100);
+  document.getElementById('bar').style.width = pct + '%';
+  document.getElementById('bar-label').textContent = count + ' / 15 topics reviewed';
+}
+
+loadProgress();
+updateBar();
+</script>
+
+</body>
+</html>
