@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗣️</text></svg>">
+  <title>Simple Interview Guide — Easy English</title>
+  <link rel="stylesheet" href="assets/css/shared.css">
+  <style>
+    .hero h1 { font-size: 2rem; color: #f1f5f9; }
+    .hero p { font-size: 1rem; color: #94a3b8; }
+    .section { background: #1e293b; border-radius: 12px; padding: 28px; margin-bottom: 24px; border: 1px solid #334155; }
+    .section-title { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+    .section-sub { font-size: 0.85rem; color: #64748b; margin-bottom: 20px; }
+    .q-block { margin-bottom: 32px; }
+    .q-block:last-child { margin-bottom: 0; }
+    .question { font-size: 1rem; font-weight: 700; color: #fbbf24; margin-bottom: 12px; padding-left: 12px; border-left: 3px solid #fbbf24; }
+    .explain { color: #94a3b8; font-size: 0.9rem; margin-bottom: 12px; line-height: 1.7; }
+    .say-box { background: #0c2a0c; border-left: 3px solid #4ade80; border-radius: 0 8px 8px 0; padding: 14px 16px; margin: 10px 0; }
+    .say-label { font-size: 0.7rem; font-weight: 700; color: #4ade80; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .say-box p { color: #86efac; font-size: 0.9rem; line-height: 1.7; }
+    .say-box p + p { margin-top: 8px; }
+    .remember-box { background: #0c1f3a; border-left: 3px solid #38bdf8; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 10px 0; }
+    .remember-box ul { padding-left: 16px; }
+    .remember-box li { color: #7dd3fc; font-size: 0.88rem; margin-bottom: 4px; line-height: 1.6; }
+    .dont-box { background: #2d1a00; border-left: 3px solid #fb923c; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 10px 0; }
+    .dont-box p { color: #fdba74; font-size: 0.88rem; }
+    .vs-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88rem; }
+    .vs-table th { background: #0f172a; color: #64748b; padding: 10px 14px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #334155; }
+    .vs-table td { padding: 10px 14px; color: #cbd5e1; border-bottom: 1px solid #1e293b; vertical-align: top; }
+    .vs-table tr:hover td { background: #1a2540; }
+    .step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+    .step-num { background: #3b82f6; color: white; font-weight: 700; font-size: 0.8rem; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .step-text { color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; }
+    .toc { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .toc a { background: #1e293b; border: 1px solid #334155; color: #94a3b8; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; transition: all 0.2s; }
+    .toc a:hover { background: #334155; color: #e2e8f0; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">📚 Interview Prep</span>
+  <a href="index.html">Main Guide</a>
+  <a href="checklist.html">✅ Checklist</a>
+  <a href="quiz.html">🧪 Practice Quiz</a>
+  <a href="simple-guide.html" class="active">🗣️ Simple Guide</a>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>Simple Interview Guide</h1>
+    <p>Easy English. What to say, word by word. Start here if you feel nervous or blanked out.</p>
+  </div>
+
+  <div class="toc">
+    <a href="#about-you">1. About You</a>
+    <a href="#b2b">2. B2B Project (SGD)</a>
+    <a href="#registration">3. Registration</a>
+    <a href="#preorder">4. Preorder vs Stock</a>
+    <a href="#gemoss">5. B2C Project (Gemoss)</a>
+    <a href="#hyva">6. Hyvä Theme</a>
+    <a href="#customize">7. Customizing Magento</a>
+    <a href="#performance">8. Performance</a>
+    <a href="#solo">9. Working Alone</a>
+    <a href="#hardest">10. Hardest Task</a>
+    <a href="#b2b-vs-b2c">11. B2B vs B2C</a>
+    <a href="#infra">12. Infrastructure</a>
+  </div>
+
+  <!-- ===== 1. ABOUT YOU ===== -->
+  <div class="section" id="about-you">
+    <div class="section-title">1. Tell me about yourself</div>
+    <div class="section-sub">The most important question — sets the tone for everything</div>
+
+    <div class="q-block">
+      <div class="explain">
+        Keep it <strong>under 90 seconds</strong>. Go: who you are → where you worked → what you built → why you're here.
+        Don't list everything. Give them 3 strong things and stop.
+      </div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"I'm a frontend Magento developer with about 2 years of experience at Scandiweb — one of the top Magento agencies in the world."</p>
+        <p>"My strongest project was a B2B platform for Sports Group Denmark, where I built the product listing page from scratch, a custom store selector, and multiple modules. Before that I worked on Gemoss — a full B2C storefront where I handled 20 tickets including an Algolia search integration."</p>
+        <p>"I also led the frontend team on a Magento-to-Shopify migration. I enjoy owning features end to end and I work well both independently and as part of a team — which made me excited about this role."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li><strong>Scandiweb</strong> = one of the world's top Magento agencies. Say that — it adds weight.</li>
+          <li>End with why you want THIS job. Don't just trail off.</li>
+          <li>Don't say "I love coding" or generic things. Stick to what you actually built.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 2. B2B PROJECT ===== -->
+  <div class="section" id="b2b">
+    <div class="section-title">2. The B2B Project — Sports Group Denmark</div>
+    <div class="section-sub">Your biggest, most impressive project</div>
+
+    <div class="q-block">
+      <div class="question">Tell me about a project you worked on.</div>
+      <div class="explain">
+        Sports Group Denmark (SGD) is a company that sells sports equipment and clothing to <strong>retailers</strong> (other businesses), not to normal customers.
+        Think of it like a wholesaler — a sports shop owner logs in and orders 200 pairs of shoes to stock their store.
+        <br><br>
+        This is a <strong>B2B</strong> platform (Business to Business). Only registered business accounts can access it — the public can't browse it at all.
+      </div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"Sports Group Denmark is a B2B platform — retailers log in to order sports products in bulk. My main work there was building the product listing page completely from scratch: grid and list view toggle, filtering, sorting. I also built a custom store selector that appears after login, letting buyers choose between the stock website and the preorder website. On top of that I built three custom Magento modules for this project."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li>PLP = Product Listing Page — the page that shows a grid of products</li>
+          <li>3 custom modules: Store Selector, PLP features, B2B login restriction</li>
+          <li>B2B = businesses buying from businesses. Not a normal shopping site.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 3. REGISTRATION ===== -->
+  <div class="section" id="registration">
+    <div class="section-title">3. B2B Registration — How it works</div>
+    <div class="section-sub">It's nothing like normal shop sign-up</div>
+
+    <div class="q-block">
+      <div class="question">How did you handle user registration in the B2B project?</div>
+      <div class="explain">
+        In a normal shop (B2C), anyone can sign up with their email. B2B is completely different.
+        <br><br>
+        <strong>The whole site is locked.</strong> If you're not logged in, every page redirects you to the login page — even the homepage. You literally cannot see anything without an account.
+        <br><br>
+        Accounts are not self-service. A <strong>company</strong> is created by the admin. Then the company admin adds users under that company. Regular users can't add more users or change addresses — only the company admin can.
+      </div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"Registration is not open to the public. The entire site is locked behind login — if you visit any page without being logged in, you get redirected to the login page. We built this with a custom plugin that intercepts every request and checks if the user is authenticated."</p>
+        <p>"Account creation uses Magento's native B2B Company Accounts feature. The admin creates a company, and then the company admin manages who gets access. We added custom restrictions so that regular users can't create other users or edit company addresses — only the company admin can do that."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li>Module name: <code>Scandiweb_LoginRestriction</code> — a plugin on <code>FrontControllerInterface</code></li>
+          <li>It checks <code>$customerSession->isLoggedIn()</code> on every request</li>
+          <li>If not logged in → redirect to <code>/customer/account/login</code></li>
+          <li>Magento B2B Company Accounts = native Magento feature, not custom-built</li>
+          <li>Our custom part = restricting what regular users can do (<code>RestrictUserCreation</code>, <code>RestrictAddressEdit</code> plugins)</li>
+        </ul>
+      </div>
+
+      <div class="dont-box">
+        <p>Don't say "users register themselves." They don't. The admin creates company accounts and the company admin manages users.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 4. PREORDER VS STOCK ===== -->
+  <div class="section" id="preorder">
+    <div class="section-title">4. Preorder vs Stock Orders</div>
+    <div class="section-sub">Two completely separate Magento websites</div>
+
+    <div class="q-block">
+      <div class="question">What is the difference between preorder and stock in that project?</div>
+      <div class="explain">
+        <strong>This is NOT about "out of stock" items.</strong> That's a common mistake — don't say preorder means ordering something that is out of stock. That's "backorder" in Magento. This is a completely different business concept.
+        <br><br>
+        <strong>How the sports industry works:</strong> brands design next season's products (say, next winter's ski boots) months before they exist. Retailers — the sports shops — need to commit early so the brand knows how many units to manufacture. So in spring, a retailer visits the preorder website and places a bulk order for next winter's collection. The products aren't in any warehouse yet. They'll be shipped when the season starts.
+        <br><br>
+        Then separately, the same retailer can visit the stock website and order products that are <strong>in the warehouse right now</strong> — available to ship immediately.
+        <br><br>
+        These are two completely separate Magento websites with the codes <code>stock</code> and <code>preorder</code>. Each has its own catalog, its own stores, and its own URL. The project also has a <code>Sgd_Season</code> module that links products to specific seasons — which is why the order history table shows a "Season" column so retailers know which season each preorder belongs to. After login, the store selector popup lets the buyer pick which website to shop on.
+      </div>
+
+      <table class="vs-table">
+        <tr><th>Stock Orders</th><th>Pre-Orders</th></tr>
+        <tr><td>Products are in the warehouse <strong>now</strong></td><td>Products are from the <strong>next season</strong> — not made yet</td></tr>
+        <tr><td>Ship immediately after ordering</td><td>Ship months later when the season arrives</td></tr>
+        <tr><td>Website code: <code>stock</code></td><td>Website code: <code>preorder</code></td></tr>
+      </table>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"The platform has two separate Magento websites — stock and preorder. Stock orders are for products available right now in the warehouse. Preorders are for the next season — retailers order months in advance before the products are even manufactured. It's how the sports industry works — you commit to your winter collection in spring."</p>
+        <p>"The order history page splits orders into 'Pre-Order Confirmations' and 'Stock Order Confirmations'. We detect which type an order is by checking which website it was placed on — the store's website code."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li>Preorder ≠ out of stock. Preorder = retailers ordering next season's products months before they're manufactured.</li>
+          <li>The business reason: the brand needs to know how many units to produce — retailer commitments tell them that.</li>
+          <li>Two Magento websites: <code>stock</code> (available now) and <code>preorder</code> (next season)</li>
+          <li>After login → store selector popup → pick which website to shop on</li>
+          <li><code>Sgd_Season</code> module links products to seasons — shows in the "Season" column in order history</li>
+          <li><code>OrderConfirmations</code> ViewModel checks <code>$store->getWebsite()->getCode()</code> to split orders into preorders vs stock orders</li>
+          <li>Magento's "backorder" = completely different thing = allowing orders when current stock qty is 0</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 5. GEMOSS ===== -->
+  <div class="section" id="gemoss">
+    <div class="section-title">5. The B2C Project — Gemoss</div>
+    <div class="section-sub">Full storefront, 20 tickets, Algolia search</div>
+
+    <div class="q-block">
+      <div class="question">Tell me about another project you worked on.</div>
+      <div class="explain">
+        Gemoss is a normal shopping site (B2C — selling to regular customers). You worked on it end-to-end handling 20 tickets. The most complex work was the Algolia search integration.
+      </div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"Gemoss was a full B2C storefront where I handled 20 tickets across multiple modules. The most complex was integrating Algolia search — a third-party search service that replaces Magento's default search with much faster, smarter results including live autocomplete as you type."</p>
+        <p>"Other work included a full product listing page with a quick-shop modal, a subcategory carousel, a hero slider via Page Builder, and Amasty Shop By Brand for brand filtering."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li>Algolia = third-party search service. Faster than Magento's built-in search.</li>
+          <li>Autocomplete = suggestions appear as you type in the search box</li>
+          <li>Quick-shop modal = popup to add to cart without going to the product page</li>
+          <li>Amasty Shop By Brand = third-party module for filtering by brand</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 6. HYVA ===== -->
+  <div class="section" id="hyva">
+    <div class="section-title">6. What is Hyvä Theme?</div>
+    <div class="section-sub">The modern way to build Magento frontends</div>
+
+    <div class="q-block">
+      <div class="question">What is Hyvä and why use it?</div>
+      <div class="explain">
+        The old Magento theme (Luma) uses old JavaScript tools — RequireJS and KnockoutJS — that were slow and hard to work with. Pages were heavy.
+        <br><br>
+        Hyvä replaces all of that with:
+        <br>
+        <strong>Alpine.js</strong> — simple JavaScript for interactions (like dropdowns, modals, cart updates)<br>
+        <strong>TailwindCSS</strong> — utility CSS classes so you style directly in HTML instead of writing separate CSS files
+        <br><br>
+        The result: pages that score 90+ on Google Lighthouse (performance test) instead of 30.
+      </div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"Hyvä is a modern Magento theme that replaces the old Luma frontend. Instead of RequireJS and KnockoutJS, it uses Alpine.js for JavaScript and TailwindCSS for styling. The result is much faster pages — on the projects I worked on, Lighthouse scores went from around 30 on Luma to 90+ on Hyvä, and the JavaScript bundle went from 800KB down to about 40KB."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li>Alpine.js = small, simple JS framework. Think of it like Vue but tiny.</li>
+          <li>TailwindCSS = write styles as HTML classes like <code>class="flex gap-4 text-sm"</code></li>
+          <li>Lighthouse score = Google's performance rating (0-100). Higher is better.</li>
+          <li>800KB → 40KB JS = 20× smaller. That's why pages load so much faster.</li>
+        </ul>
+      </div>
+
+      <div class="q-block" style="margin-top: 20px">
+        <div class="question">How do you set up a new Hyvä project from scratch?</div>
+        <div class="explain">
+          The first sprint is all about design foundation — before any feature work.
+        </div>
+        <div class="say-box">
+          <div class="say-label">Say this</div>
+          <p>"I start by setting up the design system. I configure <code>tailwind.config.js</code> with the brand's colors, typography scale, and breakpoints. Then I wire up a <code>/style_guide</code> page — it's a route in Magento that renders all the design tokens live: colors, headings, buttons, form fields. That way the whole team can verify the design before any feature is built."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 7. CUSTOMIZING MAGENTO ===== -->
+  <div class="section" id="customize">
+    <div class="section-title">7. How do you customize Magento without touching core files?</div>
+    <div class="section-sub">The most important Magento concept — you MUST know this</div>
+
+    <div class="q-block">
+      <div class="explain">
+        You never edit Magento's core files directly. If you do, your changes get wiped on the next update. Instead, you use these techniques:
+      </div>
+
+      <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Plugin (Interceptor)</strong> — run your code before, after, or around any Magento method. Example: before the login method runs, check if the user is allowed. This is what the <code>LoginRestriction</code> module uses.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Preference (Rewrite)</strong> — completely replace a Magento class with your own. Like saying "use MY version of this class instead." Use sparingly — can cause conflicts.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Observer/Event</strong> — Magento fires events at key moments (order placed, product saved). You listen for those events and run your code. No touching core needed.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Layout XML + Template override</strong> — copy a Magento template file into your theme folder with the same path. Magento uses yours instead. No editing the original.</div></div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"Magento has a layered extension system so you never touch core. The three main techniques are: plugins — to run code before or after any method; observers — to listen for Magento events like 'order placed'; and template overrides — copy a template into your theme at the same path and Magento uses yours automatically. I used plugins heavily on the B2B project, for example to intercept every page request and redirect guests to login."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 8. PERFORMANCE ===== -->
+  <div class="section" id="performance">
+    <div class="section-title">8. Performance — How did you make stores fast?</div>
+    <div class="section-sub">Lighthouse 30 → 90+</div>
+
+    <div class="q-block">
+      <div class="question">How does Magento handle performance? What did you do?</div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"The biggest performance gain on the projects I worked on came from using Hyvä theme instead of Luma. Luma loads about 800KB of JavaScript — it uses old tools like RequireJS and KnockoutJS. Hyvä uses Alpine.js and TailwindCSS and brings that down to about 40KB. Lighthouse scores went from 30 to 90+."</p>
+        <p>"On top of that, Magento has built-in caching — Full Page Cache stores rendered HTML so the server doesn't rebuild the page on every visit. And for search, using Algolia instead of Magento's default search makes results much faster since Algolia indexes everything in their own cloud."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li>Hyvä = the main reason for the performance jump</li>
+          <li>Full Page Cache (FPC) = Magento saves the rendered HTML and serves it directly next time</li>
+          <li>Algolia = external search service, indexed separately, very fast</li>
+          <li>Varnish = a cache layer that sits in front of Magento (used in Readymage/production)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 9. WORKING ALONE ===== -->
+  <div class="section" id="solo">
+    <div class="section-title">9. Working Alone</div>
+    <div class="section-sub">They're hiring a solo developer — show you can handle it</div>
+
+    <div class="q-block">
+      <div class="question">You'll be working alone with no team. How do you handle that?</div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"This actually fits how I've worked. At Scandiweb, I owned each ticket from planning through delivery — I built, tested, and shipped features independently, with a team lead reviewing my PRs. On Gemoss alone I handled 20 tickets across multiple modules."</p>
+        <p>"For a solo role I'd focus on: documenting everything clearly so the codebase explains itself, using git with meaningful commit messages, setting up CI/CD early so deployments are safe, and checking in with the business side regularly. The risk in solo work is scope creep — I'd work with you to keep priorities clear."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li>You weren't fully independent at Scandiweb — a team lead reviewed PRs. Be honest about that.</li>
+          <li>But you DID own execution end to end on every ticket. That's real ownership.</li>
+          <li>CI/CD = automated deployment pipeline. Changes are tested and deployed automatically.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 10. HARDEST TASK ===== -->
+  <div class="section" id="hardest">
+    <div class="section-title">10. Hardest Technical Challenge</div>
+    <div class="section-sub">The Algolia integration on Gemoss</div>
+
+    <div class="q-block">
+      <div class="question">Tell me about the hardest technical problem you solved.</div>
+      <div class="explain">
+        The Algolia integration on Gemoss was complex because the module assumed a certain design (a search toggle button) but Gemoss had the search bar always visible. You had to rework the initialization logic to match.
+      </div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"The Algolia search integration on Gemoss. The challenge wasn't just installing the module — it was making it work correctly inside Hyvä where the Gemoss design had the search bar always visible, with no toggle button. The Hyvä Algolia module assumed a toggle flow, so its initialization didn't fire correctly."</p>
+        <p>"I had to override the form template, safely merge the Algolia config without breaking values set elsewhere, and guard against the autocomplete being initialized twice. I also had to register the inline script with Hyvä's CSP system — Hyvä blocks inline scripts by default for security."</p>
+        <p>"Solving it taught me to always read the source of a third-party module before overriding its templates — the initialization order is never obvious from the outside."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li><strong>CSP</strong> = Content Security Policy. Browser security that blocks inline scripts. In Hyvä you must call <code>$hyvaCsp->registerInlineScript()</code> to allow them.</li>
+          <li><strong>window.algoliaConfig</strong> = a global JS object. Multiple templates write to it. You have to merge carefully so they don't overwrite each other.</li>
+          <li><strong>Autocomplete guard</strong> = a boolean flag (<code>autocompleteInitialized</code>) so the init code only runs once even if triggered multiple times.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 11. B2B VS B2C ===== -->
+  <div class="section" id="b2b-vs-b2c">
+    <div class="section-title">11. B2B vs B2C in Magento</div>
+    <div class="section-sub">Know the key differences</div>
+
+    <div class="q-block">
+      <div class="question">What is the difference between B2B and B2C in Magento?</div>
+
+      <table class="vs-table">
+        <tr><th>B2C (Business to Consumer)</th><th>B2B (Business to Business)</th></tr>
+        <tr><td>Anyone can register and shop</td><td>Only approved company accounts can access</td></tr>
+        <tr><td>One price for everyone</td><td>Custom pricing per company / customer group</td></tr>
+        <tr><td>Buy one or a few items</td><td>Buy in bulk (hundreds of units)</td></tr>
+        <tr><td>Pay immediately at checkout</td><td>Can use purchase orders, credit lines, invoicing</td></tr>
+        <tr><td>Example: Gemoss</td><td>Example: Sports Group Denmark</td></tr>
+      </table>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"B2C is a normal shop where anyone can register and buy. B2B is more complex — access is restricted to approved business accounts, pricing is negotiated per company, orders are in bulk, and payment can be through purchase orders or credit lines rather than immediate payment. On Sports Group Denmark I worked with Magento's native B2B Company Accounts module, which handles all of this."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 12. INFRASTRUCTURE ===== -->
+  <div class="section" id="infra">
+    <div class="section-title">12. Infrastructure — Readymage, AWS, Cloudflare, GCP</div>
+    <div class="section-sub">Be honest about what you've used directly</div>
+
+    <div class="q-block">
+      <div class="question">What is GCP and have you used it?</div>
+      <div class="explain">
+        GCP (Google Cloud Platform) is a service from Google where you rent servers, databases, and other infrastructure. You haven't directly provisioned GCP, but you understand the concepts through Readymage.
+        <br><br>
+        <strong>Readymage</strong> is Scandiweb's managed Magento hosting platform. It runs on <strong>AWS</strong> (Amazon's cloud — similar idea to GCP but from Amazon). Every Scandiweb project you worked on ran on Readymage — containerised PHP/Nginx, managed MySQL, Kubernetes auto-scaling.
+      </div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"I haven't provisioned GCP directly, but I understand the concepts through Readymage — Scandiweb's managed Magento hosting platform built on AWS. All my Scandiweb projects ran on it: containerised PHP/Nginx, managed MySQL, Kubernetes auto-scaling. GCP covers the same concepts with different service names — Compute Engine instead of EC2, Cloud SQL instead of RDS. I'd get up to speed quickly."</p>
+      </div>
+    </div>
+
+    <div class="q-block" style="margin-top: 24px">
+      <div class="question">What is Cloudflare and have you used it?</div>
+      <div class="explain">
+        Cloudflare sits in front of your server. Every visitor goes through Cloudflare first. You used it on the J.R. Dunn Magento-to-Shopify migration.
+      </div>
+
+      <div class="say-box">
+        <div class="say-label">Say this</div>
+        <p>"I used Cloudflare on the J.R. Dunn migration from Magento 1 to Shopify. It's a layer that sits in front of your server — it handles CDN (serving files fast from servers near the user), WAF (blocking attacks before they reach your server), DDoS protection, and free SSL certificates. For Magento the key thing is to exclude dynamic pages like checkout from Cloudflare's cache, otherwise users would see each other's cart data."</p>
+      </div>
+
+      <div class="remember-box">
+        <ul>
+          <li><strong>CDN</strong> = Content Delivery Network. Copies your images/CSS/JS to servers around the world. Users download from the nearest one — faster.</li>
+          <li><strong>WAF</strong> = Web Application Firewall. Blocks hackers before they reach Magento.</li>
+          <li><strong>DDoS</strong> = Distributed Denial of Service. Attackers send millions of fake requests to crash your server. Cloudflare absorbs them.</li>
+          <li>Always bypass Cloudflare cache for <code>/checkout</code>, <code>/cart</code>, <code>/customer</code> — these pages are personal to each user.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
